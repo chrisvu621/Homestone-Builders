@@ -1,0 +1,36 @@
+{
+  "name": "homestone-builders",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "photos": "node scripts/generate-photo-manifest.mjs",
+    "predev": "npm run photos",
+    "dev": "next dev",
+    "prebuild": "npm run photos",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "npm run photos && next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "kitchens/kitchen-01.jpg": {
+    "alt": "Remodeled kitchen with white shaker cabinets and a quartz island",
+    "featured": true
+  },
+  "bathrooms/bath-02.jpg": { "alt": "Walk-in shower with frameless glass door" },
+  "bathrooms/bath-05.jpg": { "hidden": true }
+}
