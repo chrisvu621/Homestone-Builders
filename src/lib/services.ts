@@ -21,6 +21,10 @@ export type Service = {
   materials?: string[];
   /** Photo folder under public/projects used on this page, if any. */
   photoCategory?: ProjectCategory;
+  /** When the photo folder is empty, omit the photo section entirely rather than showing "photos coming soon". */
+  hideEmptyPhotos?: boolean;
+  /** Other service slugs to link from this page's scope section. */
+  related?: string[];
   /** Large photo near the top of the page, as "<folder>/<file>". Defaults to the first project photo. */
   heroPhoto?: string;
 };
@@ -56,6 +60,7 @@ export const services: Service[] = [
       "Have you started choosing materials?",
     ],
     photoCategory: "kitchens",
+    related: ["flooring-installation"],
     heroPhoto: "kitchens/kitchen-02.jpg",
   },
   {
@@ -87,6 +92,7 @@ export const services: Service[] = [
       "Do you have tile, stone or fixtures picked out already?",
     ],
     photoCategory: "bathrooms",
+    related: ["flooring-installation", "shower-doors"],
   },
   {
     slug: "adu-construction",
@@ -199,13 +205,13 @@ export const services: Service[] = [
     name: "Flooring Installation",
     label: "Flooring installation",
     summary:
-      "New flooring for residential remodels, on its own or as part of a kitchen or bathroom project.",
+      "Hardwood, engineered hardwood, luxury vinyl plank, laminate and porcelain or ceramic tile, installed on its own or as part of a remodel.",
     seoTitle: "Flooring Installation in Garden Grove & Orange County",
     seoDescription:
-      "Residential flooring installation by Homestone Builders Inc., licensed California general contractor CSLB #1142545, for kitchen and bathroom remodels and other rooms in Garden Grove, Westminster, Fountain Valley and nearby Orange County cities.",
+      "Hardwood, LVP, laminate and tile flooring installation in Garden Grove, Westminster, Huntington Beach and nearby Orange County cities. Licensed contractor CSLB #1142545.",
     heading: "Flooring installation",
     intro:
-      "New floors for homes in Orange County, installed as part of a kitchen or bathroom remodel or as a project of their own. We coordinate the flooring with the rest of the work so it fits the cabinets, tile and trim around it.",
+      "We install solid and engineered hardwood, luxury vinyl plank, laminate, and porcelain and ceramic tile in Orange County homes, as part of a kitchen or bathroom remodel or as a project of its own.",
     scopeHeading: "Where flooring fits",
     scope: [
       "New flooring as part of a kitchen or bathroom remodel",
@@ -219,9 +225,17 @@ export const services: Service[] = [
       "Have you chosen a material, or would you like to talk through options?",
       "Is the flooring part of a larger remodel?",
     ],
-    // Add materials here once confirmed, e.g. ["Tile", "Luxury vinyl plank (LVP)", "Laminate"].
-    materials: [],
+    // Confirmed by the owner. Only list materials the business actually installs.
+    materials: [
+      "Solid hardwood",
+      "Engineered hardwood",
+      "Luxury vinyl plank (LVP)",
+      "Laminate",
+      "Porcelain and ceramic tile",
+    ],
     photoCategory: "flooring",
+    // No confirmed flooring photos yet: keep a text-only layout instead of a "coming soon" block.
+    hideEmptyPhotos: true,
   },
 ];
 

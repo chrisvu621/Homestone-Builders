@@ -10,7 +10,7 @@ import { ShowroomCard } from "@/components/ShowroomCard";
 import { findPhoto, getServiceProjects, projectCategories } from "@/lib/projects";
 import { pageMetadata } from "@/lib/seo";
 import { getService, services } from "@/lib/services";
-import { getSiteUrl, site } from "@/lib/site";
+import { getSiteUrl, primaryCitiesText, site } from "@/lib/site";
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -48,8 +48,9 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   // Projects already shown at the top aren't repeated in the grid below.
   const heroSrcs = new Set(heroPhotos.map((h) => h.photo.src));
   const moreProjects = projects.filter((p) => !p.photos.every((ph) => heroSrcs.has(ph.src)));
+  const related = (service.related ?? []).flatMap((slug) => services.filter((s) => s.slug === slug));
   const others = services.filter((s) => s.slug !== service.slug);
-  const showMaterials = ["kitchen-remodeling", "bathroom-remodeling"].includes(service.slug);
+  const showShowroom = ["kitchen-remodeling", "bathroom-remodeling"].includes(service.slug);
   const estimateHref = `/contact?service=${encodeURIComponent(service.label)}`;
   const url = getSiteUrl();
 
@@ -116,7 +117,23 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-sm text-ink-soft">Every project is scoped individually.</p>
+          <p className="mt-4 text-sm text-ink-soft">
+            Every project is scoped individually.
+            {related.length > 0 && (
+              <>
+                {" "}Related:{" "}
+                {related.map((r, i) => (
+                  <span key={r.slug}>
+                    {i > 0 && ", "}
+                    <Link href={`/services/${r.slug}`} className="link-quiet text-ink">
+                      {r.name.toLowerCase()}
+                    </Link>
+                  </span>
+                ))}
+                .
+              </>
+            )}
+          </p>
           {service.materials && service.materials.length > 0 && (
             <>
               <h2 className="type-h3 mt-10">Materials we install</h2>
@@ -139,10 +156,13 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
               </li>
             ))}
           </ul>
+          <p className="mt-4 text-sm text-ink-soft">
+            Serving {primaryCitiesText}. Other Orange County cities on a project-by-project basis.
+          </p>
         </div>
       </section>
 
-      {service.photoCategory && (moreProjects.length > 0 || projects.length === 0) && (
+      {service.photoCategory && (moreProjects.length > 0 || (projects.length === 0 && !service.hideEmptyPhotos)) && (
         <section className="border-t border-line" aria-labelledby="photos-heading">
           <div className="container-page py-14 md:py-20">
             <div className="mb-10 flex flex-col justify-between gap-4 md:mb-12 md:flex-row md:items-end">
@@ -164,7 +184,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         </section>
       )}
 
-      {showMaterials && (
+      {showShowroom && (
         <section className="container-page pb-14 md:pb-20">
           <div className="max-w-xl">
             <ShowroomCard />
@@ -201,6 +221,18 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           url: `${url}/services/${service.slug}`,
           provider: { "@id": `${url}/#business` },
           areaServed: site.primaryCities.map((c) => ({ "@type": "City", name: `${c}, CA` })),
+          ...(service.materials?.length
+            ? {
+                hasOfferCatalog: {
+                  "@type": "OfferCatalog",
+                  name: `${service.name} materials`,
+                  itemListElement: service.materials.map((m) => ({
+                    "@type": "Offer",
+                    itemOffered: { "@type": "Service", name: `${m} ${service.name.toLowerCase()}` },
+                  })),
+                },
+              }
+            : {}),
         }}
       />
     </>
