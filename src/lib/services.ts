@@ -29,7 +29,7 @@ export const services: Service[] = [
       "Layout changes, cabinetry, countertops, flooring, lighting and finish work, built and installed by one licensed contractor.",
     seoTitle: "Kitchen Remodeling in Garden Grove & Orange County",
     seoDescription:
-      "Kitchen remodeling by Homestone Builders Inc., a licensed California general contractor (CSLB #1142545) serving Garden Grove, Westminster, Huntington Beach and nearby Orange County cities. Call 714-475-2377.",
+      "Kitchen remodeling by Homestone Builders Inc., a licensed California general contractor (CSLB #1142545) serving Garden Grove, Westminster, Huntington Beach and nearby Orange County cities. Call 714-794-8184.",
     heading: "Kitchen remodeling",
     intro:
       "From new finishes to a reworked layout, we handle the construction and installation, so you work with one licensed general contractor instead of separate crews.",

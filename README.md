@@ -80,7 +80,7 @@ Behavior when delivery isn't possible (it never reports a fake success):
 - **Credentials missing, development:** `/contact` shows a developer notice listing the
   missing variables. Submissions return "your request was not sent, please call."
 - **Credentials missing, production build:** the form is replaced with a "please call
-  714-475-2377" panel.
+  714-794-8184" panel.
 - **Provider error or network failure:** the visitor is told the request was not sent
   and shown the phone number. The error (never the key) is logged on the server.
 

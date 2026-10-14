@@ -15,9 +15,9 @@ export const site = {
   licenseLookupUrl:
     "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
   phone: {
-    display: "714-475-2377",
-    href: "tel:7144752377",
-    e164: "+17144752377",
+    display: "714-794-8184",
+    href: "tel:7147948184",
+    e164: "+17147948184",
   },
   region: "Orange County, California",
   primaryCities: [
