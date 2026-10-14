@@ -21,7 +21,7 @@ declare global {
 }
 
 const inputCls =
-  "block w-full rounded-none border-0 border-b border-ink/30 bg-transparent px-0 py-3 text-base text-ink placeholder:text-ink-soft/70 focus:border-ink focus:shadow-[0_1px_0_0_#242625] focus:ring-0 focus:outline-none aria-[invalid=true]:border-red-700";
+  "block w-full rounded-none border-0 border-b border-ink/30 bg-transparent px-0 py-3 text-base text-ink placeholder:text-ink-soft/50 focus:border-ink focus:shadow-[0_1px_0_0_#242625] focus:ring-0 focus:outline-none aria-[invalid=true]:border-red-700";
 
 export function EstimateForm({
   cities,
@@ -49,7 +49,11 @@ export function EstimateForm({
 
   // Move focus to the status message after each submission so screen readers announce it.
   useEffect(() => {
-    if (state.attempt > 0) statusRef.current?.focus();
+    if (state.attempt > 0 && statusRef.current) {
+      // Focus for screen readers, then scroll so the message sits below the sticky header.
+      statusRef.current.focus({ preventScroll: true });
+      statusRef.current.scrollIntoView({ block: "start" });
+    }
     if (state.attempt > 0 && turnstileId.current && window.turnstile) window.turnstile.reset(turnstileId.current);
   }, [state]);
 
@@ -64,7 +68,7 @@ export function EstimateForm({
         <span className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-ink text-canvas">
           <Check className="h-6 w-6" />
         </span>
-        <h2 className="text-4xl">Request received</h2>
+        <h2 className="type-h2">Request received</h2>
         <p className="mt-3 text-ink-soft">{state.message}</p>
         <p className="mt-4 text-sm text-ink-soft">
           Need to reach us sooner? Call <a href={site.phone.href} className="text-ink underline decoration-accent underline-offset-4">{site.phone.display}</a>.
@@ -99,9 +103,13 @@ export function EstimateForm({
           ref={statusRef}
           tabIndex={-1}
           role="alert"
-          className="border-l-2 border-red-800 bg-red-50/60 px-4 py-3 text-red-900 outline-none"
+          className="border-l-2 border-red-800 bg-red-50 px-4 py-3 text-[0.95rem] text-red-900 outline-none"
         >
-          <p className="font-semibold">{state.message}</p>
+          <p className="font-medium">
+            {state.status === "invalid" && state.errors
+              ? `Please check the ${Object.keys(state.errors).length === 1 ? "field" : `${Object.keys(state.errors).length} fields`} marked below.`
+              : state.message}
+          </p>
           {state.status !== "invalid" && (
             <a href={site.phone.href} className="mt-3 inline-flex items-center gap-2 font-medium text-ink underline decoration-accent underline-offset-4">
               <PhoneIcon className="h-4 w-4" /> Call {site.phone.display}
@@ -224,7 +232,7 @@ function Label({ name, children, optional }: { name: string; children: string; o
 function ErrorText({ errors, name }: { errors: FieldErrors; name: keyof EstimateFields }) {
   if (!errors[name]) return null;
   return (
-    <p id={`f-${name}-error`} className="mt-1.5 text-sm font-medium text-red-800">
+    <p id={`f-${name}-error`} className="mt-2 text-[0.82rem] leading-snug text-red-800">
       {errors[name]}
     </p>
   );

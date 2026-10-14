@@ -58,7 +58,7 @@ export default function ContactPage() {
           {!email.configured && showSetup && <SetupInstructions missing={email.missing} problems={email.problems} />}
           {productionUnconfigured ? (
             <div className="border-t border-ink pt-8">
-              <h2 className="text-3xl">Our online form is temporarily unavailable</h2>
+              <h2 className="type-h3">Our online form is temporarily unavailable</h2>
               <p className="mt-3 text-ink-soft">Please call us to request an estimate.</p>
               <a href={site.phone.href} className="btn btn-primary mt-6">
                 <PhoneIcon className="h-4 w-4" /> Call {site.phone.display}
@@ -77,7 +77,7 @@ export default function ContactPage() {
         <aside className="space-y-12">
           <div className="border-t border-ink pt-6">
             <p className="eyebrow">Prefer the phone?</p>
-            <a href={site.phone.href} className="mt-3 block font-serif text-[2.4rem] leading-none tabular-nums">
+            <a href={site.phone.href} className="mt-3 block text-[1.9rem] leading-none font-medium tracking-tight tabular-nums md:text-[2.1rem]">
               {site.phone.display}
             </a>
             <p className="mt-3 text-sm text-ink-soft">

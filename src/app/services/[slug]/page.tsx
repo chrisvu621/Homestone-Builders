@@ -54,11 +54,11 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   const url = getSiteUrl();
 
   const ctas = (
-    <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
-      <Link href={estimateHref} className="btn btn-primary">
+    <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3 md:flex-col lg:flex-row">
+      <Link href={estimateHref} className="btn btn-primary px-3 text-sm sm:px-6 sm:text-[0.92rem]">
         Request an Estimate
       </Link>
-      <a href={site.phone.href} className="btn btn-outline text-ink tabular-nums">
+      <a href={site.phone.href} className="btn btn-outline px-3 text-sm text-ink tabular-nums sm:px-6 sm:text-[0.92rem]">
         Call {site.phone.display}
       </a>
     </div>
@@ -108,7 +108,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
 
       <section className="container-page grid gap-12 py-14 md:grid-cols-2 md:gap-16 md:py-20">
         <div>
-          <h2 className="text-[1.9rem] leading-tight md:text-4xl">{service.scopeHeading}</h2>
+          <h2 className="type-h3">{service.scopeHeading}</h2>
           <ul className="mt-6 border-t border-line">
             {service.scope.map((item) => (
               <li key={item} className="border-b border-line py-3.5 text-ink">
@@ -119,7 +119,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           <p className="mt-4 text-sm text-ink-soft">Every project is scoped individually.</p>
         </div>
         <div>
-          <h2 className="text-[1.9rem] leading-tight md:text-4xl">{service.planningHeading}</h2>
+          <h2 className="type-h3">{service.planningHeading}</h2>
           <ul className="mt-6 border-t border-line">
             {service.planning.map((q) => (
               <li key={q} className="border-b border-line py-3.5 text-ink-soft">
@@ -134,7 +134,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         <section className="border-t border-line" aria-labelledby="photos-heading">
           <div className="container-page py-14 md:py-20">
             <div className="mb-10 flex flex-col justify-between gap-4 md:mb-12 md:flex-row md:items-end">
-              <h2 id="photos-heading" className="text-[2.2rem] leading-none md:text-6xl">
+              <h2 id="photos-heading" className="type-h2">
                 {heroPhotos.length > 0
                   ? `More ${projectCategories[service.photoCategory].label.toLowerCase()}`
                   : projectCategories[service.photoCategory].label}
@@ -168,7 +168,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-3">
             {others.map((s) => (
               <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="link-quiet font-serif text-2xl">
+                <Link href={`/services/${s.slug}`} className="link-quiet type-caption">
                   {s.name}
                 </Link>
               </li>

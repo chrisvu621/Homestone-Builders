@@ -42,12 +42,12 @@ export default function HomePage() {
         </div>
         <div className="container-page relative pt-6 pb-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-16 lg:text-canvas">
           <div className="max-w-2xl">
-            <p className="eyebrow hidden lg:block lg:text-canvas/85!">Licensed General Contractor · CSLB #{site.licenseNumber}</p>
-            <h1 className="text-[2.45rem] leading-[1.02] sm:text-5xl lg:mt-4 lg:text-[5.25rem]">
+            <p className="eyebrow mb-3 lg:mb-0 lg:text-canvas/85!">CSLB License #{site.licenseNumber}</p>
+            <h1 className="type-hero lg:mt-4">
               Beautiful spaces. Thoughtfully built.
             </h1>
-            <p className="mt-3 max-w-lg text-[0.95rem] text-ink-soft lg:mt-5 lg:text-lg lg:text-canvas/90">
-              Kitchen and bathroom remodeling, ADUs, and home improvements throughout Orange County.
+            <p className="mt-3 max-w-md text-[0.95rem] leading-relaxed text-ink-soft lg:mt-5 lg:max-w-lg lg:text-lg lg:text-canvas/90">
+              A licensed Orange County general contractor specializing in kitchens, bathrooms, ADUs, and home improvements.
             </p>
             <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:gap-3 lg:mt-8">
               <Link href="/gallery" className="btn btn-primary px-3 text-sm sm:px-6 sm:text-[0.95rem] lg:btn-light">
@@ -66,7 +66,7 @@ export default function HomePage() {
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <p className="eyebrow">Selected work</p>
-            <h2 id="work-heading" className="mt-3 text-[2.2rem] leading-[1.05] md:text-6xl">
+            <h2 id="work-heading" className="type-h2 mt-3">
               Kitchens &amp; bathrooms
             </h2>
           </div>
@@ -97,7 +97,7 @@ export default function HomePage() {
                       />
                     </div>
                     <div className="mt-4 flex items-baseline justify-between gap-4">
-                      <h3 className="font-serif text-[1.45rem] leading-tight font-normal">{project.title}</h3>
+                      <h3 className="type-caption font-normal">{project.title}</h3>
                       <span className="shrink-0 text-xs tracking-[0.14em] text-ink-soft uppercase">{project.kind}</span>
                     </div>
                   </Link>
@@ -117,7 +117,7 @@ export default function HomePage() {
         <div className="container-page grid gap-10 py-14 md:py-24 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
           <div>
             <p className="eyebrow">Services</p>
-            <h2 id="services-heading" className="mt-3 text-[2.2rem] leading-[1.05] md:text-6xl">
+            <h2 id="services-heading" className="type-h2 mt-3">
               What we build
             </h2>
           </div>
@@ -127,7 +127,7 @@ export default function HomePage() {
                 <Link href={`/services/${s.slug}`} className="group flex items-center gap-5 py-5 md:gap-8 md:py-6">
                   <span className="w-6 text-xs text-accent tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                   <span className="flex-1">
-                    <span className="block font-serif text-[1.55rem] leading-tight md:text-[1.9rem]">{s.name}</span>
+                    <span className="type-h3 block">{s.name}</span>
                     <span className="mt-1 hidden text-sm text-ink-soft md:block">{s.summary}</span>
                   </span>
                   <ArrowRight className="h-5 w-5 text-ink-soft transition-transform group-hover:translate-x-1 group-hover:text-ink" />
@@ -143,7 +143,7 @@ export default function HomePage() {
         <div className="container-page grid gap-12 py-14 md:py-24 lg:grid-cols-3 lg:gap-16">
           <div className="space-y-3 border-t border-ink pt-6">
             <p className="eyebrow">Licensed</p>
-            <p className="font-serif text-[1.9rem] leading-tight">CSLB #{site.licenseNumber}</p>
+            <p className="type-h3">CSLB #{site.licenseNumber}</p>
             <p className="text-sm leading-relaxed text-ink-soft">
               California general contractor.{" "}
               <a href={site.licenseLookupUrl} target="_blank" rel="noopener noreferrer" className="link-quiet text-ink">
@@ -153,7 +153,7 @@ export default function HomePage() {
           </div>
           <div className="space-y-3 border-t border-ink pt-6">
             <p className="eyebrow" id="area-heading">Where we work</p>
-            <p className="font-serif text-[1.9rem] leading-tight">Orange County</p>
+            <p className="type-h3">Orange County</p>
             <p className="text-sm leading-relaxed text-ink-soft">
               Primary service cities: {site.primaryCities.join(", ")}. Other Orange County cities on a
               project-by-project basis.

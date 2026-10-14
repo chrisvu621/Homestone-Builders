@@ -20,7 +20,7 @@ export function PageHeader({
       <div className="mt-8 grid gap-8 md:mt-12 md:grid-cols-[1fr_auto] md:items-end md:gap-16">
         <div className="max-w-3xl space-y-4">
           {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-          <h1 className="text-[2.5rem] leading-[1.04] md:text-[4.25rem]">{title}</h1>
+          <h1 className="type-h1">{title}</h1>
           {children && <div className="max-w-2xl text-ink-soft md:text-lg">{children}</div>}
         </div>
         {aside}

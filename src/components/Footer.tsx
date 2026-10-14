@@ -10,7 +10,7 @@ export function Footer() {
         <div className="space-y-5">
           <Logo tone="light" />
           <p className="text-sm text-canvas/70">Licensed California General Contractor · CSLB #{site.licenseNumber}</p>
-          <a href={site.phone.href} className="inline-block font-serif text-2xl tabular-nums hover:text-sand">
+          <a href={site.phone.href} className="inline-block text-xl font-medium tracking-wide tabular-nums hover:text-sand">
             {site.phone.display}
           </a>
         </div>

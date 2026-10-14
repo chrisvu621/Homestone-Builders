@@ -35,7 +35,7 @@ export function Header() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/70 bg-canvas/95 backdrop-blur supports-[backdrop-filter]:bg-canvas/85">
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-canvas">
       <div className="container-page flex h-16 items-center justify-between gap-6 md:h-[4.75rem]">
         <Logo />
         <nav aria-label="Main" className="hidden items-center gap-9 lg:flex">
@@ -76,7 +76,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               aria-current={pathname === item.href ? "page" : undefined}
-              className="border-b border-line/70 py-3 font-serif text-[1.6rem] leading-tight last:border-0 aria-[current=page]:text-ink-soft"
+              className="type-h3 border-b border-line/70 py-3.5 last:border-0 aria-[current=page]:text-ink-soft"
             >
               {item.label}
             </Link>

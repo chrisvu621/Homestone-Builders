@@ -64,7 +64,7 @@ export function ProjectGallery({ projects, label }: { projects: Project[]; label
                   </div>
                 )}
                 <figcaption className="mt-4 flex items-baseline justify-between gap-4">
-                  <span className="font-serif text-[1.45rem] leading-tight">{project.title}</span>
+                  <span className="type-caption">{project.title}</span>
                   <span className="shrink-0 text-xs tracking-[0.14em] text-ink-soft uppercase">{project.kind}</span>
                 </figcaption>
               </figure>
@@ -196,7 +196,7 @@ function Lightbox({
 
           <div className="flex items-end justify-between gap-4 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:px-8 md:pb-8">
             <div className="min-w-0">
-              <p className="font-serif text-xl leading-tight md:text-2xl">{current.project.title}</p>
+              <p className="type-caption">{current.project.title}</p>
               <p className="mt-1 line-clamp-2 text-xs text-canvas/65 md:text-sm">{current.photo.alt}</p>
             </div>
             {count > 1 && (

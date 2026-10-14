@@ -6,7 +6,7 @@ export function ShowroomCard({ compact = false }: { compact?: boolean }) {
   return (
     <div className="border-t border-ink pt-6">
       <p className="eyebrow">Materials showroom · Walk-ins welcome</p>
-      <h3 className="mt-3 font-serif text-[1.9rem] leading-tight font-normal">{showroom.operator}</h3>
+      <h3 className="type-h3 mt-3 font-normal">{showroom.operator}</h3>
       <p className="mt-1 text-ink-soft">
         {showroom.street}, {showroom.city}, {showroom.state}
       </p>

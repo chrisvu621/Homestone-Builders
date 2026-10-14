@@ -24,7 +24,7 @@ export default function ServicesPage() {
             <li key={s.slug} className="border-b border-line">
               <Link href={`/services/${s.slug}`} className="group grid gap-2 py-7 md:grid-cols-[3rem_1fr_1.3fr_auto] md:items-center md:gap-8 md:py-9">
                 <span className="text-xs text-accent tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                <span className="font-serif text-[2rem] leading-tight md:text-[2.6rem]">{s.name}</span>
+                <span className="type-h3">{s.name}</span>
                 <span className="text-ink-soft">{s.summary}</span>
                 <ArrowRight className="hidden h-5 w-5 text-ink-soft transition-transform group-hover:translate-x-1 group-hover:text-ink md:block" />
               </Link>

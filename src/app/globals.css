@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette */
+  /* Brand palette: warm off-white, stone, charcoal, and a restrained warm taupe for small details */
   --color-canvas: #faf9f6;
   --color-sand: #eae7e1;
   --color-ink: #242625;
@@ -10,8 +10,8 @@
   --color-ink-soft: #5e615f;
   --color-line: #dad6ce;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-dm-serif), ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -39,7 +39,7 @@
   h2 {
     font-family: var(--font-serif);
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
   h3 {
@@ -54,6 +54,93 @@
   }
   [id] {
     scroll-margin-top: 5.5rem;
+  }
+  /* Keep focused fields and messages clear of the sticky header and the mobile call bar. */
+  html {
+    scroll-padding-top: 5.5rem;
+    scroll-padding-bottom: 6rem;
+  }
+  @media (width >= 64rem) {
+    html {
+      scroll-padding-bottom: 1rem;
+    }
+  }
+  input,
+  select,
+  textarea,
+  [role="alert"],
+  [role="status"] {
+    scroll-margin-top: 1.25rem;
+    scroll-margin-bottom: 1.25rem;
+  }
+}
+
+/* Type scale. DM Serif Display is set at one weight; size and spacing carry the hierarchy. */
+@utility type-hero {
+  font-family: var(--font-serif);
+  font-size: 2.15rem;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  @media (width >= 40rem) {
+    font-size: 2.75rem;
+  }
+  @media (width >= 64rem) {
+    font-size: 4.1rem;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+  @media (width >= 80rem) {
+    font-size: 4.6rem;
+  }
+}
+
+@utility type-h1 {
+  font-family: var(--font-serif);
+  font-size: 2.05rem;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  @media (width >= 48rem) {
+    font-size: 2.9rem;
+  }
+  @media (width >= 64rem) {
+    font-size: 3.4rem;
+    letter-spacing: -0.022em;
+  }
+}
+
+@utility type-h2 {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  @media (width >= 48rem) {
+    font-size: 2.4rem;
+  }
+  @media (width >= 64rem) {
+    font-size: 2.75rem;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* List items, facts and names: between a heading and body text. */
+@utility type-h3 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  @media (width >= 48rem) {
+    font-size: 1.6rem;
+  }
+}
+
+/* Project titles under photos. */
+@utility type-caption {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  @media (width >= 48rem) {
+    font-size: 1.25rem;
   }
 }
 
@@ -70,9 +157,9 @@
 /* Small uppercase label */
 @utility eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-ink-soft);
 }
@@ -84,9 +171,9 @@
   gap: 0.6rem;
   min-height: 3rem;
   padding: 0.8rem 1.6rem;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
   line-height: 1.2;
   text-align: center;
   border-radius: 2px;
@@ -133,7 +220,7 @@
 
 @utility prose-page {
   & h2 {
-    font-size: 1.85rem;
+    font-size: 1.6rem;
     line-height: 1.2;
     margin-top: 2.5rem;
     margin-bottom: 0.75rem;

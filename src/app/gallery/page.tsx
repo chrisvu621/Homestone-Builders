@@ -27,7 +27,7 @@ export default function GalleryPage() {
         <p>Selected projects completed by our team.</p>
       </PageHeader>
 
-      <nav aria-label="Gallery sections" className="sticky top-16 z-30 border-y border-line bg-canvas/95 backdrop-blur md:top-[4.75rem]">
+      <nav aria-label="Gallery sections" className="sticky top-16 z-30 border-y border-line bg-canvas md:top-[4.75rem]">
         <ul className="container-page flex gap-8 overflow-x-auto py-3.5 text-sm">
           {sections.map(({ category, projects }) => (
             <li key={category}>
@@ -43,7 +43,7 @@ export default function GalleryPage() {
       <div className="container-page space-y-16 py-12 md:space-y-24 md:py-20">
         {sections.map(({ category, projects }) => (
           <section key={category} id={category} aria-labelledby={`${category}-heading`}>
-            <h2 id={`${category}-heading`} className="mb-8 text-[2.2rem] leading-none md:mb-12 md:text-6xl">
+            <h2 id={`${category}-heading`} className="type-h2 mb-8 md:mb-12">
               {projectCategories[category].label}
             </h2>
             {projects.length > 0 ? (
