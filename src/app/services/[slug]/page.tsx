@@ -123,7 +123,7 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
         </ul>
       </section>
 
-      <CtaBand heading={`Planning a ${service.name.toLowerCase()} project?`} />
+      <CtaBand />
 
       <JsonLd
         data={{

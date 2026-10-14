@@ -22,5 +22,6 @@ folders is presented on the site as Homestone's own work.
 ## Optional: `photos.json`
 
 Copy `photos.example.json` to `photos.json` to set descriptive alt text,
-choose the homepage hero photo, or hide a photo without deleting it. Keys are
+choose the homepage hero photo, hide a photo without deleting it, or show a
+photo on another service page too (`"also": ["shower-doors"]`). Keys are
 `<folder>/<filename>`.

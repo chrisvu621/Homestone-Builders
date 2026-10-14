@@ -39,6 +39,7 @@ for (const category of dirs) {
       ...(typeof meta.alt === "string" && meta.alt.trim() ? { alt: meta.alt.trim() } : {}),
       ...(meta.featured ? { featured: true } : {}),
       ...(meta.hidden ? { hidden: true } : {}),
+      ...(Array.isArray(meta.also) && meta.also.length ? { also: meta.also.filter((c) => typeof c === "string") } : {}),
     };
   });
   total += files.length;

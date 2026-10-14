@@ -3,7 +3,7 @@ import { CtaBand } from "@/components/CtaBand";
 import { PageHeader } from "@/components/PageHeader";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { PhotosComingSoon } from "@/components/PhotosComingSoon";
-import { getProjectPhotos, projectCategories, type ProjectCategory } from "@/lib/projects";
+import { getGalleryPhotos, projectCategories, type ProjectCategory } from "@/lib/projects";
 import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -17,7 +17,7 @@ export const metadata = pageMetadata({
 const ALWAYS_SHOWN: ProjectCategory[] = ["kitchens", "bathrooms"];
 
 export default function GalleryPage() {
-  const photos = getProjectPhotos();
+  const photos = getGalleryPhotos();
   const sections = (Object.keys(projectCategories) as ProjectCategory[]).filter(
     (c) => ALWAYS_SHOWN.includes(c) || photos[c].length > 0,
   );

@@ -73,7 +73,7 @@ export function PhotoGallery({ photos, limit, label }: Props) {
         onClose={close}
         onClick={(e) => e.target === e.currentTarget && close()}
         aria-label={current ? current.alt : "Photo viewer"}
-        className="m-0 h-dvh max-h-none w-screen max-w-none bg-black/95 p-0 text-white backdrop:bg-black/80"
+        className="m-0 h-dvh max-h-none w-screen max-w-none bg-black p-0 text-white backdrop:bg-black"
       >
         {current && (
           <div className="flex h-full flex-col">

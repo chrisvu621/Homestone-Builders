@@ -50,7 +50,7 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <p className="container-page py-6 text-xs text-sand/60">
-          © {site.name}. All rights reserved. Showroom operated by {site.showroom.operator}; construction and
+          © {site.name} All rights reserved. Showroom operated by {site.showroom.operator}; construction and
           installation performed by {site.name}.
         </p>
       </div>
