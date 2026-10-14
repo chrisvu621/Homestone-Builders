@@ -1,26 +1,33 @@
 {
   "kitchens/kitchen-01.jpg": {
+    "title": "Charcoal Shaker Kitchen",
     "alt": "Remodeled kitchen with charcoal shaker cabinets, a large island with glass-front cabinets, white countertops and pendant lights",
     "featured": true
   },
   "kitchens/kitchen-02.jpg": {
+    "title": "Two-Tone Kitchen with Glass Tile",
     "alt": "Remodeled kitchen with white glass-front upper cabinets, gray lower cabinets, blue-gray glass tile backsplash and white countertops"
   },
   "kitchens/kitchen-03.jpg": {
+    "title": "White Kitchen with Veined Countertops",
     "alt": "White shaker kitchen with mosaic tile backsplash, marble-look countertops with gold veining and pendant lights"
   },
   "kitchens/kitchen-04.jpg": {
+    "title": "White Galley Kitchen",
     "alt": "Galley kitchen with white shaker cabinets, stone-look backsplash, stainless appliances and wood-look plank flooring"
   },
   "bathrooms/bathroom-01.jpg": {
+    "title": "Walk-In Shower and Double Vanity",
     "alt": "Remodeled bathroom with a frameless glass walk-in shower, marble-look tile and a double vanity",
     "also": ["shower-doors"]
   },
   "bathrooms/bathroom-02.jpg": {
+    "title": "Shower with Sliding Glass Door",
     "alt": "Shower with a sliding glass door, marble-look wall tile, mosaic accent band and recessed niche",
     "also": ["shower-doors"]
   },
   "bathrooms/bathroom-03.jpg": {
+    "title": "White Double Vanity",
     "alt": "Double vanity with white shaker cabinets, marble-look countertop, framed mirrors and brushed-nickel faucets"
   }
 }

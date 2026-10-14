@@ -1,15 +1,18 @@
 {
   "kitchens/kitchen-01.jpg": {
-    "alt": "Remodeled kitchen with white shaker cabinets and a quartz island",
+    "project": "white-shaker-kitchen",
+    "title": "White Shaker Kitchen",
+    "alt": "Remodeled kitchen with white shaker cabinets and an island",
     "featured": true
   },
-  "bathrooms/bath-02.jpg": {
-    "alt": "Walk-in shower with frameless glass door",
-    "also": [
-      "shower-doors"
-    ]
+  "kitchens/kitchen-02.jpg": {
+    "project": "white-shaker-kitchen",
+    "alt": "Same kitchen, view toward the range"
   },
-  "bathrooms/bath-05.jpg": {
-    "hidden": true
-  }
+  "bathrooms/bath-02.jpg": {
+    "title": "Walk-In Shower",
+    "alt": "Walk-in shower with frameless glass door",
+    "also": ["shower-doors"]
+  },
+  "bathrooms/bath-05.jpg": { "hidden": true }
 }

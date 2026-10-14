@@ -1,170 +1,165 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CtaBand } from "@/components/CtaBand";
-import { ArrowRight, Chat, Hammer, PhoneIcon, ShieldDoc, Store } from "@/components/Icons";
-import { PhotoGallery } from "@/components/PhotoGallery";
+import { ArrowRight } from "@/components/Icons";
 import { PhotosComingSoon } from "@/components/PhotosComingSoon";
 import { ShowroomCard } from "@/components/ShowroomCard";
-import { getProjectPhotos, pickHeroPhoto } from "@/lib/projects";
+import { getGalleryProjects, getHeroPhoto, type Project } from "@/lib/projects";
 import { services } from "@/lib/services";
-import { primaryCitiesText, site } from "@/lib/site";
+import { site } from "@/lib/site";
+
+/** Pick up to two kitchens and two bathrooms, skipping the project used in the hero. */
+function selectedProjects(heroProjectId?: string) {
+  const pick = (list: Project[]) => list.filter((p) => p.id !== heroProjectId).slice(0, 2);
+  const kitchens = pick(getGalleryProjects("kitchens"));
+  const bathrooms = pick(getGalleryProjects("bathrooms"));
+  // Alternate wide (kitchen) and narrow (bathroom) tiles: K B / B K.
+  return [kitchens[0], bathrooms[0], bathrooms[1], kitchens[1]].filter(Boolean) as Project[];
+}
 
 export default function HomePage() {
-  const photos = getProjectPhotos();
-  const hero = pickHeroPhoto(photos);
-  // Up to 6 kitchen and bathroom photos (an even count keeps the 2- and 3-column grids tidy).
-  const pool = [...photos.kitchens.slice(0, 4), ...photos.bathrooms.slice(0, 4)].filter((p) => p.src !== hero?.src);
-  const recent = pool.length >= 6 ? pool.slice(0, 6) : pool.slice(0, pool.length > 1 ? pool.length - (pool.length % 2) : pool.length);
+  const hero = getHeroPhoto();
+  const selected = selectedProjects(hero?.project.id);
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative isolate overflow-hidden stone-surface text-ivory">
-        {hero && (
-          <>
-            <Image src={hero.src} alt={hero.alt} fill priority sizes="100vw" className="-z-10 object-cover" />
-            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/55 to-black/30 md:bg-gradient-to-r md:from-black/80 md:via-black/50 md:to-black/10" />
-          </>
-        )}
-        <div className="container-page flex min-h-[78svh] flex-col justify-end py-14 md:min-h-[640px] md:justify-center md:py-24">
-          <div className="max-w-2xl space-y-6">
-            <p className="eyebrow !text-clay-light">Licensed General Contractor · CSLB #{site.licenseNumber}</p>
-            <h1 className="text-4xl leading-[1.05] font-semibold sm:text-5xl md:text-6xl">
-              Thoughtful kitchens, baths and ADUs for Orange County homes.
+      {/* Hero: photo first. On mobile the copy sits below the photo; on desktop it overlays the lower-left corner. */}
+      <section className="relative lg:h-[calc(100svh-4.75rem)] lg:max-h-[56rem] lg:min-h-[36rem]">
+        <div className="relative h-[44svh] min-h-[16rem] bg-sand lg:absolute lg:inset-0 lg:h-auto">
+          {hero ? (
+            <Image
+              src={hero.photo.src}
+              alt={hero.photo.alt}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          ) : null}
+          {hero && (
+            <div className="absolute inset-0 hidden bg-gradient-to-t from-black/75 via-black/30 via-55% to-transparent lg:block" />
+          )}
+        </div>
+        <div className="container-page relative pt-6 pb-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-16 lg:text-canvas">
+          <div className="max-w-2xl">
+            <p className="eyebrow hidden lg:block lg:text-canvas/85!">Licensed General Contractor · CSLB #{site.licenseNumber}</p>
+            <h1 className="text-[2.45rem] leading-[1.02] sm:text-5xl lg:mt-4 lg:text-[5.25rem]">
+              Beautiful spaces. Thoughtfully built.
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-sand md:text-xl">
-              Homestone Builders handles the construction and installation of your remodel or new build, from first
-              conversation to final finish, for homeowners in {primaryCitiesText}.
+            <p className="mt-3 max-w-lg text-[0.95rem] text-ink-soft lg:mt-5 lg:text-lg lg:text-canvas/90">
+              Kitchen and bathroom remodeling, ADUs, and home improvements throughout Orange County.
             </p>
-            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-              <Link href="/contact" className="btn btn-primary">
-                Request an Estimate <ArrowRight />
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:gap-3 lg:mt-8">
+              <Link href="/gallery" className="btn btn-primary px-3 text-sm sm:px-6 sm:text-[0.95rem] lg:btn-light">
+                Explore Our Work
               </Link>
-              <a href={site.phone.href} className="btn btn-outline border-sand/60 text-ivory">
-                <PhoneIcon /> Call {site.phone.display}
-              </a>
+              <Link href="/contact" className="btn btn-outline px-3 text-sm text-ink sm:px-6 sm:text-[0.95rem] lg:text-canvas">
+                Request an Estimate
+              </Link>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Selected work */}
+      <section className="container-page py-14 md:py-24" aria-labelledby="work-heading">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <p className="eyebrow">Selected work</p>
+            <h2 id="work-heading" className="mt-3 text-[2.2rem] leading-[1.05] md:text-6xl">
+              Kitchens &amp; bathrooms
+            </h2>
+          </div>
+          <Link href="/gallery" className="link-quiet inline-flex items-center gap-2 self-start text-sm md:self-auto">
+            View all projects <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {selected.length > 0 ? (
+          <ul className="mt-10 grid gap-x-8 gap-y-12 md:mt-14 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-16">
+            {selected.map((project, i) => {
+              const photo = project.photos[0];
+              const wide = i === 0 || i === 3;
+              const ratio = photo.width && photo.height ? photo.width / photo.height : 4 / 3;
+              return (
+                <li key={project.id} className={wide ? "lg:col-span-8" : "lg:col-span-4"}>
+                  <Link href={`/gallery#${project.id}`} className="group block">
+                    <div
+                      className="relative overflow-hidden bg-sand lg:h-[34rem] lg:aspect-auto!"
+                      style={{ aspectRatio: String(Math.max(ratio, 0.8)) }}
+                    >
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        sizes={wide ? "(min-width: 1024px) 66vw, 100vw" : "(min-width: 1024px) 33vw, 100vw"}
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                      />
+                    </div>
+                    <div className="mt-4 flex items-baseline justify-between gap-4">
+                      <h3 className="font-serif text-[1.45rem] leading-tight font-normal">{project.title}</h3>
+                      <span className="shrink-0 text-xs tracking-[0.14em] text-ink-soft uppercase">{project.kind}</span>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div className="mt-10">
+            <PhotosComingSoon what="Project" />
+          </div>
+        )}
       </section>
 
       {/* Services */}
-      <section className="container-page py-16 md:py-24" aria-labelledby="services-heading">
-        <div className="max-w-2xl space-y-3">
-          <p className="eyebrow">What we build</p>
-          <h2 id="services-heading" className="text-3xl font-semibold md:text-4xl">
-            Remodeling and construction services
-          </h2>
-        </div>
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => (
-            <li key={s.slug}>
-              <Link
-                href={`/services/${s.slug}`}
-                className="group flex h-full flex-col rounded-xl border border-stone-line bg-white p-6 transition-shadow hover:shadow-lg"
-              >
-                <h3 className="text-xl font-semibold">{s.name}</h3>
-                <p className="mt-2 flex-1 text-ink-soft leading-relaxed">{s.summary}</p>
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-clay">
-                  Learn more <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Recent work */}
-      <section className="bg-sand/60 py-16 md:py-24" aria-labelledby="work-heading">
-        <div className="container-page">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div className="max-w-2xl space-y-3">
-              <p className="eyebrow">Our work</p>
-              <h2 id="work-heading" className="text-3xl font-semibold md:text-4xl">
-                Kitchens and bathrooms we&apos;ve built
-              </h2>
-            </div>
-            <Link href="/gallery" className="inline-flex items-center gap-1.5 font-semibold text-clay">
-              View the full gallery <ArrowRight />
-            </Link>
-          </div>
-          <div className="mt-10">
-            {recent.length > 0 ? (
-              <PhotoGallery photos={recent} label="Recent project photos" />
-            ) : (
-              <PhotosComingSoon what="Project" />
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust */}
-      <section className="container-page py-16 md:py-24" aria-labelledby="trust-heading">
-        <div className="max-w-2xl space-y-3">
-          <p className="eyebrow">Why homeowners call us</p>
-          <h2 id="trust-heading" className="text-3xl font-semibold md:text-4xl">
-            Straightforward, local and licensed
-          </h2>
-        </div>
-        <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <li className="space-y-3">
-            <ShieldDoc className="h-8 w-8 text-clay" />
-            <h3 className="text-lg font-semibold">California licensed</h3>
-            <p className="text-ink-soft leading-relaxed">
-              CSLB License #{site.licenseNumber}.{" "}
-              <a href={site.licenseLookupUrl} target="_blank" rel="noopener noreferrer" className="text-clay underline underline-offset-4">
-                Look it up on the CSLB website<span className="sr-only"> (opens in a new tab)</span>
-              </a>
-              .
-            </p>
-          </li>
-          <li className="space-y-3">
-            <Hammer className="h-8 w-8 text-clay" />
-            <h3 className="text-lg font-semibold">One contractor for the build</h3>
-            <p className="text-ink-soft leading-relaxed">
-              We perform the construction and installation, so you have one point of contact for the work.
-            </p>
-          </li>
-          <li className="space-y-3">
-            <Store className="h-8 w-8 text-clay" />
-            <h3 className="text-lg font-semibold">See materials in person</h3>
-            <p className="text-ink-soft leading-relaxed">
-              Browse materials at the Garden Grove showroom operated by {site.showroom.operator}.
-            </p>
-          </li>
-          <li className="space-y-3">
-            <Chat className="h-8 w-8 text-clay" />
-            <h3 className="text-lg font-semibold">Talk to us directly</h3>
-            <p className="text-ink-soft leading-relaxed">
-              Call <a href={site.phone.href} className="font-semibold text-ink">{site.phone.display}</a> or send a request
-              online, and we&apos;ll follow up about your project.
-            </p>
-          </li>
-        </ul>
-      </section>
-
-      {/* Service area + showroom */}
-      <section className="border-t border-stone-line py-16 md:py-24" aria-labelledby="area-heading">
-        <div className="container-page grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="space-y-5">
-            <p className="eyebrow">Service area</p>
-            <h2 id="area-heading" className="text-3xl font-semibold md:text-4xl">
-              Serving central and west Orange County
+      <section className="border-t border-line" aria-labelledby="services-heading">
+        <div className="container-page grid gap-10 py-14 md:py-24 lg:grid-cols-[1fr_1.6fr] lg:gap-20">
+          <div>
+            <p className="eyebrow">Services</p>
+            <h2 id="services-heading" className="mt-3 text-[2.2rem] leading-[1.05] md:text-6xl">
+              What we build
             </h2>
-            <p className="text-lg text-ink-soft leading-relaxed">Our primary service cities:</p>
-            <ul className="flex flex-wrap gap-2">
-              {site.primaryCities.map((c) => (
-                <li key={c} className="rounded-full border border-stone-line bg-white px-4 py-2 text-sm font-medium">
-                  {c}
-                </li>
-              ))}
-            </ul>
-            <p className="text-ink-soft leading-relaxed">
-              Elsewhere in Orange County? We take projects in other cities on a project-by-project basis. Tell us where
-              you are and what you&apos;re planning.
+          </div>
+          <ul className="border-t border-line">
+            {services.map((s, i) => (
+              <li key={s.slug} className="border-b border-line">
+                <Link href={`/services/${s.slug}`} className="group flex items-center gap-5 py-5 md:gap-8 md:py-6">
+                  <span className="w-6 text-xs text-accent tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="flex-1">
+                    <span className="block font-serif text-[1.55rem] leading-tight md:text-[1.9rem]">{s.name}</span>
+                    <span className="mt-1 hidden text-sm text-ink-soft md:block">{s.summary}</span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 text-ink-soft transition-transform group-hover:translate-x-1 group-hover:text-ink" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Facts, service area and showroom */}
+      <section className="border-t border-line" aria-labelledby="area-heading">
+        <div className="container-page grid gap-12 py-14 md:py-24 lg:grid-cols-3 lg:gap-16">
+          <div className="space-y-3 border-t border-ink pt-6">
+            <p className="eyebrow">Licensed</p>
+            <p className="font-serif text-[1.9rem] leading-tight">CSLB #{site.licenseNumber}</p>
+            <p className="text-sm leading-relaxed text-ink-soft">
+              California general contractor.{" "}
+              <a href={site.licenseLookupUrl} target="_blank" rel="noopener noreferrer" className="link-quiet text-ink">
+                Look up the license<span className="sr-only"> on the CSLB website (opens in a new tab)</span>
+              </a>
             </p>
           </div>
-          <ShowroomCard />
+          <div className="space-y-3 border-t border-ink pt-6">
+            <p className="eyebrow" id="area-heading">Where we work</p>
+            <p className="font-serif text-[1.9rem] leading-tight">Orange County</p>
+            <p className="text-sm leading-relaxed text-ink-soft">
+              Primary service cities: {site.primaryCities.join(", ")}. Other Orange County cities on a
+              project-by-project basis.
+            </p>
+          </div>
+          <ShowroomCard compact />
         </div>
       </section>
 

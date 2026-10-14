@@ -4,12 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
-import { Close, Menu, PhoneIcon } from "./Icons";
+import { Close, Menu } from "./Icons";
 import { Logo } from "./Logo";
 
 const nav = [
+  { href: "/gallery", label: "Our Work" },
   { href: "/services", label: "Services" },
-  { href: "/gallery", label: "Gallery" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -35,56 +35,52 @@ export function Header() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-line/80 bg-ivory/95 backdrop-blur supports-[backdrop-filter]:bg-ivory/85">
-      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-canvas/95 backdrop-blur supports-[backdrop-filter]:bg-canvas/85">
+      <div className="container-page flex h-16 items-center justify-between gap-6 md:h-[4.75rem]">
         <Logo />
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Main" className="hidden items-center gap-9 lg:flex">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
-              className="rounded-md px-3 py-2 text-[0.95rem] font-medium text-ink-soft hover:text-ink aria-[current=page]:text-clay"
+              className="text-[0.92rem] text-ink-soft transition-colors hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-accent aria-[current=page]:underline-offset-8"
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 md:flex">
-          <a href={site.phone.href} className="flex items-center gap-2 font-semibold text-ink hover:text-clay">
-            <PhoneIcon className="h-4 w-4" />
+        <div className="hidden items-center gap-7 lg:flex">
+          <a href={site.phone.href} className="text-[0.92rem] text-ink tabular-nums hover:text-ink-soft">
             {site.phone.display}
           </a>
-          <Link href="/contact" className="btn btn-primary min-h-11 px-4 text-[0.95rem]">
+          <Link href="/contact" className="btn btn-primary min-h-11 px-5 text-[0.9rem]">
             Request an Estimate
           </Link>
         </div>
         <button
           type="button"
-          className="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-md text-ink md:hidden"
+          className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-ink lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((o) => !o)}
         >
           <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-          {open ? <Close /> : <Menu />}
+          {open ? <Close className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
-      <div id="mobile-menu" hidden={!open} className="border-t border-stone-line bg-ivory md:hidden">
-        <nav aria-label="Mobile" className="container-page flex flex-col py-3">
-          {[{ href: "/", label: "Home" }, ...nav, { href: "/privacy", label: "Privacy" }].map((item) => (
+      <div id="mobile-menu" hidden={!open} className="border-t border-line bg-canvas lg:hidden">
+        <nav aria-label="Mobile" className="container-page flex flex-col py-2">
+          {[{ href: "/", label: "Home" }, ...nav].map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={pathname === item.href ? "page" : undefined}
-              className="border-b border-stone-line/60 py-3.5 text-lg font-medium last:border-0 aria-[current=page]:text-clay"
+              className="border-b border-line/70 py-3 font-serif text-[1.6rem] leading-tight last:border-0 aria-[current=page]:text-ink-soft"
             >
               {item.label}
             </Link>
           ))}
-          <Link href="/contact" className="btn btn-primary mt-3 w-full">
-            Request an Estimate
-          </Link>
         </nav>
       </div>
     </header>

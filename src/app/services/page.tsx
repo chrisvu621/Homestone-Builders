@@ -16,23 +16,17 @@ export default function ServicesPage() {
   return (
     <>
       <PageHeader crumbs={[{ name: "Services", href: "/services" }]} eyebrow="Services" title="What we build">
-        <p>
-          {site.name} performs remodeling, new construction and installation work for homeowners in {primaryCitiesText}.
-        </p>
+        <p>Remodeling, new construction and installation for homeowners in {primaryCitiesText}.</p>
       </PageHeader>
-      <section className="container-page py-14 md:py-20">
-        <ul className="grid gap-5 md:grid-cols-2">
-          {services.map((s) => (
-            <li key={s.slug}>
-              <Link
-                href={`/services/${s.slug}`}
-                className="group flex h-full flex-col rounded-xl border border-stone-line bg-white p-7 transition-shadow hover:shadow-lg"
-              >
-                <h2 className="text-2xl font-semibold">{s.name}</h2>
-                <p className="mt-3 flex-1 text-ink-soft leading-relaxed">{s.summary}</p>
-                <span className="mt-6 inline-flex items-center gap-1.5 font-semibold text-clay">
-                  {s.name} details <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </span>
+      <section className="container-page pb-16 md:pb-24">
+        <ul className="border-t border-ink">
+          {services.map((s, i) => (
+            <li key={s.slug} className="border-b border-line">
+              <Link href={`/services/${s.slug}`} className="group grid gap-2 py-7 md:grid-cols-[3rem_1fr_1.3fr_auto] md:items-center md:gap-8 md:py-9">
+                <span className="text-xs text-accent tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-serif text-[2rem] leading-tight md:text-[2.6rem]">{s.name}</span>
+                <span className="text-ink-soft">{s.summary}</span>
+                <ArrowRight className="hidden h-5 w-5 text-ink-soft transition-transform group-hover:translate-x-1 group-hover:text-ink md:block" />
               </Link>
             </li>
           ))}

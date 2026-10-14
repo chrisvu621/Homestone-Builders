@@ -9,13 +9,15 @@ export type Service = {
   seoTitle: string;
   seoDescription: string;
   heading: string;
-  intro: string[];
+  intro: string;
   scopeHeading: string;
   scope: string[];
   planningHeading: string;
   planning: string[];
   /** Photo folder under public/projects used on this page, if any. */
   photoCategory?: ProjectCategory;
+  /** Large photo near the top of the page, as "<folder>/<file>". Defaults to the first project photo. */
+  heroPhoto?: string;
 };
 
 export const services: Service[] = [
@@ -28,11 +30,9 @@ export const services: Service[] = [
     seoTitle: "Kitchen Remodeling in Garden Grove & Orange County",
     seoDescription:
       "Kitchen remodeling by Homestone Builders Inc., a licensed California general contractor (CSLB #1142545) serving Garden Grove, Westminster, Huntington Beach and nearby Orange County cities. Call 714-475-2377.",
-    heading: "Kitchen remodeling in Orange County",
-    intro: [
-      "A kitchen remodel touches almost every trade in the house: demolition, framing, plumbing, electrical, cabinetry, countertops, tile, flooring and finish work. Homestone Builders Inc. manages the construction and installation so you are working with one licensed general contractor instead of coordinating separate crews.",
-      "Whether you are refreshing finishes or reworking the whole layout, we start by understanding how you use the space and what you want to change.",
-    ],
+    heading: "Kitchen remodeling",
+    intro:
+      "From new finishes to a reworked layout, we handle the construction and installation, so you work with one licensed general contractor instead of separate crews.",
     scopeHeading: "What a kitchen project can include",
     scope: [
       "Layout changes and opening up walls (subject to structural review and permits)",
@@ -48,9 +48,10 @@ export const services: Service[] = [
       "Which parts of the current kitchen work well, and which frustrate you every day?",
       "Are you keeping the current layout, or moving sinks, appliances or walls?",
       "Do you have a budget range and a target timeline in mind?",
-      "Have you started choosing materials? You can see stone and other surfaces in person at the nearby showroom operated by Hometrade Stone & Marble.",
+      "Have you started choosing materials?",
     ],
     photoCategory: "kitchens",
+    heroPhoto: "kitchens/kitchen-02.jpg",
   },
   {
     slug: "bathroom-remodeling",
@@ -61,11 +62,9 @@ export const services: Service[] = [
     seoTitle: "Bathroom Remodeling in Garden Grove & Orange County",
     seoDescription:
       "Bathroom remodeling by Homestone Builders Inc., licensed California general contractor CSLB #1142545. Showers, tubs, vanities and tile for homes in Garden Grove, Westminster, Fountain Valley and nearby cities.",
-    heading: "Bathroom remodeling in Orange County",
-    intro: [
-      "Bathrooms pack plumbing, waterproofing, tile, electrical and ventilation into a small footprint, so careful sequencing matters. Homestone Builders Inc. handles the construction and installation from demolition through finish work.",
-      "Projects range from replacing a dated vanity and tub to fully rebuilding a primary bathroom with a walk-in shower.",
-    ],
+    heading: "Bathroom remodeling",
+    intro:
+      "Showers, tubs, vanities and tile, from a single-bath refresh to a full rebuild. We handle demolition through finish work.",
     scopeHeading: "What a bathroom project can include",
     scope: [
       "Shower and tub replacement, including tub-to-shower conversions",
@@ -93,11 +92,9 @@ export const services: Service[] = [
     seoTitle: "ADU Builder in Garden Grove & Orange County",
     seoDescription:
       "Accessory dwelling unit (ADU) construction by Homestone Builders Inc., licensed California general contractor CSLB #1142545, serving Garden Grove, Santa Ana, Westminster and nearby Orange County cities.",
-    heading: "ADU construction in Orange County",
-    intro: [
-      "An accessory dwelling unit (ADU) adds a separate living space on your lot, whether that is a detached backyard unit, an addition attached to the main house, or a converted garage. Homestone Builders Inc. builds ADUs as a licensed California general contractor.",
-      "ADUs require plans and a building permit from your city, and requirements differ from city to city. We will talk through your lot, goals and timeline so you understand the path before construction begins.",
-    ],
+    heading: "ADU construction",
+    intro:
+      "Detached units, attached additions and garage conversions. ADUs need plans and a city building permit, and requirements vary by city, so we start with your lot, goals and timeline.",
     scopeHeading: "Common types of ADU projects",
     scope: [
       "Detached ADUs in the backyard",
@@ -122,11 +119,9 @@ export const services: Service[] = [
     seoTitle: "New Home Construction in Orange County",
     seoDescription:
       "New home construction by Homestone Builders Inc., licensed California general contractor CSLB #1142545, serving Garden Grove, Huntington Beach, Fountain Valley and nearby Orange County cities.",
-    heading: "New home construction in Orange County",
-    intro: [
-      "Building a new home, or replacing an existing one, is the largest project most homeowners will take on. Homestone Builders Inc. performs ground-up residential construction as a licensed California general contractor.",
-      "Every new-home project is different. Tell us about your lot, your plans and where you are in the design process, and we will discuss next steps.",
-    ],
+    heading: "New home construction",
+    intro:
+      "Ground-up residential construction on your lot, including demolish-and-rebuild projects. Tell us where you are in the design process and we'll discuss next steps.",
     scopeHeading: "Where you might be in the process",
     scope: [
       "You own a lot and are starting from scratch",
@@ -150,10 +145,9 @@ export const services: Service[] = [
     seoTitle: "Window & Door Installation in Orange County",
     seoDescription:
       "Window and door installation by Homestone Builders Inc., licensed California general contractor CSLB #1142545, serving Garden Grove, Westminster, Stanton, Midway City and nearby Orange County cities.",
-    heading: "Window and door installation",
-    intro: [
-      "New windows and doors change how a home looks, sounds and feels. Homestone Builders Inc. installs windows and doors as a standalone project or as part of a larger remodel.",
-    ],
+    heading: "Windows & doors",
+    intro:
+      "Replacement windows, entry doors and sliding patio doors, installed on their own or as part of a larger remodel.",
     scopeHeading: "What we install",
     scope: [
       "Replacement windows",
@@ -177,10 +171,9 @@ export const services: Service[] = [
     seoTitle: "Shower Door Installation in Orange County",
     seoDescription:
       "Glass shower door installation by Homestone Builders Inc., licensed California general contractor CSLB #1142545, serving Garden Grove, Fountain Valley, Huntington Beach and nearby Orange County cities.",
-    heading: "Shower door installation",
-    intro: [
-      "A glass shower door or enclosure can be the finishing piece of a bathroom remodel, or a quick upgrade on its own. Homestone Builders Inc. installs shower doors in new and existing showers.",
-    ],
+    heading: "Shower doors",
+    intro:
+      "Glass shower doors and enclosures for new and existing showers, as a finishing piece of a remodel or a quick upgrade on its own.",
     scopeHeading: "Common shower door projects",
     scope: [
       "Replacing an existing shower door",
@@ -194,6 +187,7 @@ export const services: Service[] = [
       "Whether the shower is being rebuilt or staying as-is",
     ],
     photoCategory: "shower-doors",
+    heroPhoto: "bathrooms/bathroom-02.jpg",
   },
 ];
 

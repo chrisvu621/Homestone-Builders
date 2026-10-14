@@ -9,7 +9,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   const base = getSiteUrl();
   return (
     <>
-      <nav aria-label="Breadcrumb" className="text-sm text-ink-soft">
+      <nav aria-label="Breadcrumb" className="text-xs tracking-wide text-ink-soft">
         <ol className="flex flex-wrap items-center gap-1.5">
           {all.map((c, i) => (
             <li key={c.href} className="flex items-center gap-1.5">
@@ -17,7 +17,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
               {i === all.length - 1 ? (
                 <span aria-current="page" className="text-ink">{c.name}</span>
               ) : (
-                <Link href={c.href} className="hover:text-clay">{c.name}</Link>
+                <Link href={c.href} className="hover:text-ink">{c.name}</Link>
               )}
             </li>
           ))}

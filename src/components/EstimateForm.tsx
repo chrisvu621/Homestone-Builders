@@ -21,7 +21,7 @@ declare global {
 }
 
 const inputCls =
-  "block w-full rounded-lg border border-stone-line bg-white px-4 py-3 text-base text-ink shadow-sm placeholder:text-ink-soft/60 focus:border-clay focus:ring-2 focus:ring-clay/30 focus:outline-none aria-[invalid=true]:border-red-700";
+  "block w-full rounded-none border-0 border-b border-ink/30 bg-transparent px-0 py-3 text-base text-ink placeholder:text-ink-soft/70 focus:border-ink focus:shadow-[0_1px_0_0_#242625] focus:ring-0 focus:outline-none aria-[invalid=true]:border-red-700";
 
 export function EstimateForm({
   cities,
@@ -60,14 +60,14 @@ export function EstimateForm({
 
   if (state.status === "success") {
     return (
-      <div ref={statusRef} tabIndex={-1} role="status" className="rounded-xl border border-green-800/20 bg-green-50 p-8 text-center outline-none">
-        <span className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-700 text-white">
+      <div ref={statusRef} tabIndex={-1} role="status" className="border-t border-ink py-10 text-center outline-none">
+        <span className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-ink text-canvas">
           <Check className="h-6 w-6" />
         </span>
-        <h2 className="text-2xl font-semibold">Request received</h2>
+        <h2 className="text-4xl">Request received</h2>
         <p className="mt-3 text-ink-soft">{state.message}</p>
         <p className="mt-4 text-sm text-ink-soft">
-          Need to reach us sooner? Call <a href={site.phone.href} className="font-semibold text-clay">{site.phone.display}</a>.
+          Need to reach us sooner? Call <a href={site.phone.href} className="text-ink underline decoration-accent underline-offset-4">{site.phone.display}</a>.
         </p>
       </div>
     );
@@ -99,11 +99,11 @@ export function EstimateForm({
           ref={statusRef}
           tabIndex={-1}
           role="alert"
-          className="rounded-lg border border-red-800/25 bg-red-50 p-4 text-red-900 outline-none"
+          className="border-l-2 border-red-800 bg-red-50/60 px-4 py-3 text-red-900 outline-none"
         >
           <p className="font-semibold">{state.message}</p>
           {state.status !== "invalid" && (
-            <a href={site.phone.href} className="mt-3 inline-flex items-center gap-2 font-semibold text-clay">
+            <a href={site.phone.href} className="mt-3 inline-flex items-center gap-2 font-medium text-ink underline decoration-accent underline-offset-4">
               <PhoneIcon className="h-4 w-4" /> Call {site.phone.display}
             </a>
           )}
@@ -111,10 +111,10 @@ export function EstimateForm({
       )}
 
       <p id="form-required-note" className="text-sm text-ink-soft">
-        Fields marked <span className="text-clay">*</span> are required.
+        Fields marked * are required.
       </p>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <Label name="name">Name</Label>
           <input {...fieldProps("name")} type="text" autoComplete="name" required maxLength={limits.name} className={inputCls} />
@@ -196,12 +196,12 @@ export function EstimateForm({
       )}
 
       <div className="space-y-3 pt-1">
-        <button type="submit" disabled={pending || startedAt === null} className="btn btn-primary w-full sm:w-auto disabled:opacity-60">
+        <button type="submit" disabled={pending || startedAt === null} className="btn btn-primary w-full px-10 sm:w-auto disabled:opacity-60">
           {pending ? "Sending…" : "Send Estimate Request"}
         </button>
         <p className="text-sm text-ink-soft">
           We use these details only to respond about your project. See our{" "}
-          <Link href="/privacy" className="text-clay underline underline-offset-4">Privacy Policy</Link>.
+          <Link href="/privacy" className="link-quiet text-ink">Privacy Policy</Link>.
         </p>
       </div>
     </form>
@@ -210,12 +210,12 @@ export function EstimateForm({
 
 function Label({ name, children, optional }: { name: string; children: string; optional?: boolean }) {
   return (
-    <label htmlFor={`f-${name}`} className="mb-1.5 block font-medium">
+    <label htmlFor={`f-${name}`} className="block text-xs font-medium tracking-[0.12em] text-ink-soft uppercase">
       {children}
       {optional ? (
-        <span className="ml-1 font-normal text-ink-soft">(optional)</span>
+        <span className="ml-1 font-normal tracking-normal normal-case">(optional)</span>
       ) : (
-        <span aria-hidden="true" className="ml-0.5 text-clay">*</span>
+        <span aria-hidden="true" className="ml-0.5">*</span>
       )}
     </label>
   );

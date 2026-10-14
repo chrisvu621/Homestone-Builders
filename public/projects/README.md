@@ -21,7 +21,12 @@ folders is presented on the site as Homestone's own work.
 
 ## Optional: `photos.json`
 
-Copy `photos.example.json` to `photos.json` to set descriptive alt text,
-choose the homepage hero photo, hide a photo without deleting it, or show a
-photo on another service page too (`"also": ["shower-doors"]`). Keys are
-`<folder>/<filename>`.
+Copy `photos.example.json` to `photos.json` (keys are `<folder>/<filename>`) to:
+
+- `title`: a short project title shown in the gallery (describe what's visible;
+  don't add locations or details you can't confirm)
+- `alt`: descriptive alt text for accessibility and SEO
+- `project`: group several photos into one project by giving them the same id
+- `featured`: use this photo as the homepage hero
+- `hidden`: hide a photo without deleting it
+- `also`: also show the project on another service page, e.g. `["shower-doors"]`

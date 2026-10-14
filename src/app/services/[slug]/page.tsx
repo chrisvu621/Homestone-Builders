@@ -1,16 +1,16 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CtaBand } from "@/components/CtaBand";
-import { ArrowRight, Check, PhoneIcon } from "@/components/Icons";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
-import { PhotoGallery } from "@/components/PhotoGallery";
 import { PhotosComingSoon } from "@/components/PhotosComingSoon";
+import { ProjectGallery } from "@/components/ProjectGallery";
 import { ShowroomCard } from "@/components/ShowroomCard";
-import { getProjectPhotos, projectCategories } from "@/lib/projects";
+import { findPhoto, getServiceProjects, projectCategories } from "@/lib/projects";
 import { pageMetadata } from "@/lib/seo";
 import { getService, services } from "@/lib/services";
-import { getSiteUrl, primaryCitiesText, site } from "@/lib/site";
+import { getSiteUrl, site } from "@/lib/site";
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -28,11 +28,41 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
   const service = getService(slug);
   if (!service) notFound();
 
-  const allPhotos = getProjectPhotos();
-  const photos = service.photoCategory ? allPhotos[service.photoCategory] : [];
+  const projects = service.photoCategory ? getServiceProjects(service.photoCategory) : [];
+  const hero =
+    (service.heroPhoto && findPhoto(service.heroPhoto)) ||
+    (projects[0] ? { project: projects[0], photo: projects[0].photos[0] } : undefined);
+  // A portrait lead photo is paired with a second portrait photo so neither is cropped into a wide banner.
+  const isPortrait = (p: { width?: number; height?: number }) => Boolean(p.width && p.height && p.height > p.width);
+  const heroPhotos = hero
+    ? isPortrait(hero.photo)
+      ? [
+          hero,
+          ...projects
+            .flatMap((project) => project.photos.map((photo) => ({ project, photo })))
+            .filter((x) => x.photo.src !== hero.photo.src && isPortrait(x.photo))
+            .slice(0, 1),
+        ]
+      : [hero]
+    : [];
+  // Projects already shown at the top aren't repeated in the grid below.
+  const heroSrcs = new Set(heroPhotos.map((h) => h.photo.src));
+  const moreProjects = projects.filter((p) => !p.photos.every((ph) => heroSrcs.has(ph.src)));
   const others = services.filter((s) => s.slug !== service.slug);
   const showMaterials = ["kitchen-remodeling", "bathroom-remodeling"].includes(service.slug);
+  const estimateHref = `/contact?service=${encodeURIComponent(service.label)}`;
   const url = getSiteUrl();
+
+  const ctas = (
+    <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
+      <Link href={estimateHref} className="btn btn-primary">
+        Request an Estimate
+      </Link>
+      <a href={site.phone.href} className="btn btn-outline text-ink tabular-nums">
+        Call {site.phone.display}
+      </a>
+    </div>
+  );
 
   return (
     <>
@@ -41,87 +71,111 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
           { name: "Services", href: "/services" },
           { name: service.name, href: `/services/${service.slug}` },
         ]}
-        eyebrow={`Licensed general contractor · CSLB #${site.licenseNumber}`}
+        eyebrow={`CSLB #${site.licenseNumber}`}
         title={service.heading}
+        aside={<div className="hidden md:block">{ctas}</div>}
       >
-        <p>{service.summary}</p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link href={`/contact?service=${encodeURIComponent(service.label)}`} className="btn btn-primary">
-            Request an Estimate <ArrowRight />
-          </Link>
-          <a href={site.phone.href} className="btn btn-outline text-ink">
-            <PhoneIcon /> {site.phone.display}
-          </a>
-        </div>
+        <p>{service.intro}</p>
+        <div className="mt-6 md:hidden">{ctas}</div>
       </PageHeader>
 
-      <section className="container-page grid gap-12 py-14 md:py-20 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
-        <div className="prose-page">
-          {service.intro.map((p) => (
-            <p key={p.slice(0, 32)} className="text-lg">{p}</p>
+      {heroPhotos.length > 0 && (
+        <div className={`container-page grid gap-2 md:gap-3 ${heroPhotos.length > 1 ? "grid-cols-2" : ""}`}>
+          {heroPhotos.map(({ project, photo }, i) => (
+            <figure key={photo.src} className={i > 0 ? "hidden sm:block" : heroPhotos.length > 1 ? "col-span-2 sm:col-span-1" : ""}>
+              <div
+                className={`relative overflow-hidden bg-sand ${
+                  heroPhotos.length > 1 ? "aspect-[4/5] lg:aspect-[5/6]" : "aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]"
+                }`}
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  priority={i === 0}
+                  sizes={heroPhotos.length > 1 ? "(min-width: 640px) 50vw, 100vw" : "100vw"}
+                  className="object-cover"
+                />
+              </div>
+              <figcaption className="mt-3 flex justify-between gap-4 text-xs tracking-[0.14em] text-ink-soft uppercase">
+                <span>{project.title}</span>
+                <span className="hidden sm:inline">{project.kind}</span>
+              </figcaption>
+            </figure>
           ))}
-          <h2>{service.scopeHeading}</h2>
-          <ul className="!list-none !pl-0">
+        </div>
+      )}
+
+      <section className="container-page grid gap-12 py-14 md:grid-cols-2 md:gap-16 md:py-20">
+        <div>
+          <h2 className="text-[1.9rem] leading-tight md:text-4xl">{service.scopeHeading}</h2>
+          <ul className="mt-6 border-t border-line">
             {service.scope.map((item) => (
-              <li key={item} className="flex gap-3">
-                <Check className="mt-1 h-5 w-5 shrink-0 text-clay" />
-                <span>{item}</span>
+              <li key={item} className="border-b border-line py-3.5 text-ink">
+                {item}
               </li>
             ))}
           </ul>
-          <p className="text-sm">Every project is scoped individually. We&apos;ll confirm exactly what&apos;s included in yours.</p>
+          <p className="mt-4 text-sm text-ink-soft">Every project is scoped individually.</p>
         </div>
-        <aside className="h-fit rounded-xl border border-stone-line bg-white p-6 md:p-8">
-          <h2 className="text-xl font-semibold">{service.planningHeading}</h2>
-          <ul className="mt-4 space-y-3 text-ink-soft leading-relaxed">
+        <div>
+          <h2 className="text-[1.9rem] leading-tight md:text-4xl">{service.planningHeading}</h2>
+          <ul className="mt-6 border-t border-line">
             {service.planning.map((q) => (
-              <li key={q} className="border-l-2 border-clay-light pl-3">{q}</li>
+              <li key={q} className="border-b border-line py-3.5 text-ink-soft">
+                {q}
+              </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-ink-soft">
-            Serving {primaryCitiesText}. Other Orange County cities on a project-by-project basis.
-          </p>
-        </aside>
+        </div>
       </section>
 
-      {service.photoCategory && (
-        <section className="bg-sand/60 py-14 md:py-20" aria-labelledby="photos-heading">
-          <div className="container-page space-y-8">
-            <h2 id="photos-heading" className="text-3xl font-semibold">
-              {projectCategories[service.photoCategory].label} we&apos;ve completed
-            </h2>
-            {photos.length > 0 ? (
-              <PhotoGallery photos={photos} limit={6} label={`${service.name} project photos`} />
+      {service.photoCategory && (moreProjects.length > 0 || projects.length === 0) && (
+        <section className="border-t border-line" aria-labelledby="photos-heading">
+          <div className="container-page py-14 md:py-20">
+            <div className="mb-10 flex flex-col justify-between gap-4 md:mb-12 md:flex-row md:items-end">
+              <h2 id="photos-heading" className="text-[2.2rem] leading-none md:text-6xl">
+                {heroPhotos.length > 0
+                  ? `More ${projectCategories[service.photoCategory].label.toLowerCase()}`
+                  : projectCategories[service.photoCategory].label}
+              </h2>
+              <Link href="/gallery" className="link-quiet self-start text-sm md:self-auto">
+                View all projects
+              </Link>
+            </div>
+            {moreProjects.length > 0 ? (
+              <ProjectGallery projects={moreProjects} label={`${service.name} projects`} />
             ) : (
               <PhotosComingSoon what={projectCategories[service.photoCategory].label.replace(/s$/, "")} />
-            )}
-            {photos.length > 6 && (
-              <Link href={`/gallery#${service.photoCategory}`} className="inline-flex items-center gap-1.5 font-semibold text-clay">
-                See all {photos.length} photos <ArrowRight />
-              </Link>
             )}
           </div>
         </section>
       )}
 
       {showMaterials && (
-        <section className="container-page py-14 md:py-20">
-          <ShowroomCard />
+        <section className="container-page pb-14 md:pb-20">
+          <div className="max-w-xl">
+            <ShowroomCard />
+          </div>
         </section>
       )}
 
-      <section className="container-page border-t border-stone-line py-14" aria-labelledby="other-heading">
-        <h2 id="other-heading" className="text-2xl font-semibold">Other services</h2>
-        <ul className="mt-6 flex flex-wrap gap-3">
-          {others.map((s) => (
-            <li key={s.slug}>
-              <Link href={`/services/${s.slug}`} className="inline-block rounded-full border border-stone-line bg-white px-4 py-2.5 font-medium hover:border-clay hover:text-clay">
-                {s.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <nav aria-labelledby="other-heading" className="border-t border-line">
+        <div className="container-page py-12">
+          <h2 id="other-heading" className="eyebrow font-sans">
+            Other services
+          </h2>
+          <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-3">
+            {others.map((s) => (
+              <li key={s.slug}>
+                <Link href={`/services/${s.slug}`} className="link-quiet font-serif text-2xl">
+                  {s.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
 
       <CtaBand />
 
