@@ -1,4 +1,4 @@
-import type { EstimateFields } from "./validation";
+import type { InquiryFields } from "./validation";
 
 /**
  * Configurable email notification provider.
@@ -54,27 +54,25 @@ export function getEmailConfig(env: Env = process.env): EmailConfigStatus {
   };
 }
 
-export type EstimateEmail = { subject: string; text: string; replyTo?: string };
+export type InquiryEmail = { subject: string; text: string; replyTo?: string };
 
-export function buildEstimateEmail(data: EstimateFields, meta: { submittedAt: Date }): EstimateEmail {
+export function buildInquiryEmail(data: InquiryFields, meta: { submittedAt: Date }): InquiryEmail {
   const lines = [
-    "New estimate request from the Homestone Builders website",
+    "New callback request from the Homestone Builders website",
     "",
-    `Name:      ${data.name}`,
-    `Phone:     ${data.phone}`,
-    `Email:     ${data.email || "(not provided)"}`,
-    `City:      ${data.city}`,
-    `Service:   ${data.service}`,
-    `Timeline:  ${data.timeline || "(not provided)"}`,
+    `Name:       ${data.name}`,
+    `Phone:      ${data.phone}`,
+    `Reason:     ${data.reason}`,
+    ...(data.topic ? [`Came from:  ${data.topic} page`] : []),
     "",
-    "Project description:",
-    data.description,
+    "Message:",
+    data.message || "(none)",
     "",
     `Submitted: ${meta.submittedAt.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })} (Pacific)`,
   ];
   // Subject is a single line; validation already stripped control characters.
-  const subject = `Estimate request: ${data.service} – ${data.city} – ${data.name}`.slice(0, 200);
-  return { subject, text: lines.join("\n"), replyTo: data.email || undefined };
+  const subject = `Callback request: ${data.reason} – ${data.name} – ${data.phone}`.slice(0, 200);
+  return { subject, text: lines.join("\n") };
 }
 
 /** Pulls the bare address out of "Name <addr@x.com>" for providers that want it separately. */
@@ -88,7 +86,7 @@ export class EmailDeliveryError extends Error {}
 
 export async function sendEmail(
   config: EmailConfig,
-  email: EstimateEmail,
+  email: InquiryEmail,
   fetchImpl: typeof fetch = fetch,
 ): Promise<void> {
   let url: string;

@@ -58,10 +58,12 @@ Put real photos of completed projects in `public/projects/<category>/`
   never falls back to stock imagery.
 - Set descriptive alt text in `photos.json` for accessibility and SEO.
 
-## Estimate form email setup
+## Contact form email setup
 
-The form at `/contact` validates input on the server, then sends the request as a
-plain-text email through one of three providers, using their HTTPS APIs (no SDKs):
+The callback form at `/contact` asks for name, phone number and "How can we help?"
+(Request an estimate / Discuss a project / General question), plus an optional
+message. It validates input on the server, then sends the request as a plain-text
+email through one of three providers, using their HTTPS APIs (no SDKs):
 
 | `EMAIL_PROVIDER` | `EMAIL_API_KEY` is…        | Sender requirement                         |
 | ---------------- | -------------------------- | ------------------------------------------ |
@@ -70,7 +72,8 @@ plain-text email through one of three providers, using their HTTPS APIs (no SDKs
 | `sendgrid`       | API key with Mail Send     | Verified single sender or domain           |
 
 Set `EMAIL_PROVIDER`, `EMAIL_API_KEY`, `EMAIL_FROM` and `EMAIL_TO` (see
-`.env.example`). The visitor's email, if given, is used as Reply-To.
+`.env.example`). Every notification includes the visitor's name, phone number,
+reason and message (or "(none)"), plus the service page they came from, if any.
 
 Behavior when delivery isn't possible (it never reports a fake success):
 
@@ -89,7 +92,7 @@ are not bundled into client JavaScript.
 - Hidden honeypot field
 - Minimum fill time (3 s), stamped when the form becomes interactive. Because of this,
   the form needs JavaScript; without it, visitors are asked to call.
-- Max 2 links in the description
+- Max 2 links in the message
 - Per-IP rate limit (5 per 10 minutes). This is in memory and per server instance, so
   it is best-effort on serverless hosting.
 - Optional **Cloudflare Turnstile**: set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and
@@ -112,7 +115,7 @@ Nothing has been deployed. These steps are for when you're ready:
    Vercel detects Next.js; keep the default build settings.
 2. Under **Settings → Environment Variables**, add `NEXT_PUBLIC_SITE_URL` and the
    `EMAIL_*` variables (and Turnstile keys if used) for **Production**.
-3. Deploy, then submit a test estimate and confirm the email arrives.
+3. Deploy, then submit a test request on `/contact` and confirm the email arrives.
 4. Add your domain under **Settings → Domains** and update DNS as Vercel instructs.
    Redeploy if you changed `NEXT_PUBLIC_SITE_URL`.
 5. Submit `https://your-domain/sitemap.xml` in Google Search Console.
@@ -124,7 +127,7 @@ dozen photos fits comfortably.
 
 ```
 src/app/                  routes (home, services/[slug], gallery, about, contact, privacy)
-src/app/contact/actions.ts  estimate Server Action (validation → spam checks → email)
+src/app/contact/actions.ts  contact form Server Action (spam checks → validation → email)
 src/components/           UI components (header, sticky mobile call bar, gallery, form…)
 src/lib/site.ts           business facts — single source of truth
 src/lib/services.ts       service page content

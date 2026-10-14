@@ -1,4 +1,4 @@
-import { EstimateForm } from "@/components/EstimateForm";
+import { ContactForm } from "@/components/ContactForm";
 import { PhoneIcon } from "@/components/Icons";
 import { PageHeader } from "@/components/PageHeader";
 import { ShowroomCard } from "@/components/ShowroomCard";
@@ -7,8 +7,8 @@ import { pageMetadata } from "@/lib/seo";
 import { primaryCitiesText, site } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: "Request an Estimate",
-  description: `Request an estimate from ${site.name} for kitchen or bathroom remodeling, ADUs, new homes, windows, doors or shower doors in Orange County. Call ${site.phone.display}.`,
+  title: "Contact Us: Request a Callback or Estimate",
+  description: `Contact ${site.name}, licensed Orange County general contractor, for an estimate or a callback about kitchen and bathroom remodeling, ADUs and home improvements. Call ${site.phone.display}.`,
   path: "/contact",
 });
 
@@ -49,8 +49,8 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageHeader crumbs={[{ name: "Request an Estimate", href: "/contact" }]} eyebrow="Contact" title="Request an estimate">
-        <p>Tell us about your project and we&apos;ll follow up to talk through scope and next steps.</p>
+      <PageHeader crumbs={[{ name: "Contact", href: "/contact" }]} eyebrow="Contact" title="Let's talk about your project.">
+        <p>Have a question or planning a remodel? Leave your details and we&apos;ll get back to you.</p>
       </PageHeader>
 
       <section className="container-page grid gap-14 pb-16 md:pb-24 lg:grid-cols-[1.7fr_1fr] lg:gap-24">
@@ -59,17 +59,14 @@ export default function ContactPage() {
           {productionUnconfigured ? (
             <div className="border-t border-ink pt-8">
               <h2 className="type-h3">Our online form is temporarily unavailable</h2>
-              <p className="mt-3 text-ink-soft">Please call us to request an estimate.</p>
+              <p className="mt-3 text-ink-soft">Please call us and we&apos;ll be happy to help.</p>
               <a href={site.phone.href} className="btn btn-primary mt-6">
                 <PhoneIcon className="h-4 w-4" /> Call {site.phone.display}
               </a>
             </div>
           ) : (
             <div className="border-t border-ink pt-8">
-              <EstimateForm
-                cities={site.primaryCities}
-                turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || undefined}
-              />
+              <ContactForm turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || undefined} />
             </div>
           )}
         </div>

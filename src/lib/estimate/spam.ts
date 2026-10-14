@@ -6,7 +6,7 @@ export type SpamVerdict = { ok: true } | { ok: false; reason: string };
  * Cheap, privacy-friendly bot checks that run before anything else:
  * - a hidden honeypot field that humans never fill in
  * - a minimum fill time (bots submit instantly)
- * - a cap on links in the description (link spam)
+ * - a cap on links in the message (link spam)
  */
 export function checkSubmissionHeuristics(formData: FormData, now = Date.now()): SpamVerdict {
   const honeypot = formData.get(HONEYPOT_FIELD);
@@ -21,9 +21,9 @@ export function checkSubmissionHeuristics(formData: FormData, now = Date.now()):
   if (elapsed < MIN_FILL_MS) return { ok: false, reason: "too-fast" };
   if (elapsed > MAX_FILL_MS) return { ok: false, reason: "stale" };
 
-  const description = formData.get("description");
-  if (typeof description === "string") {
-    const links = description.match(/https?:\/\/|www\./gi)?.length ?? 0;
+  const message = formData.get("message");
+  if (typeof message === "string") {
+    const links = message.match(/https?:\/\/|www\./gi)?.length ?? 0;
     if (links > 2) return { ok: false, reason: "links" };
   }
   return { ok: true };

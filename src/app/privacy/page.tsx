@@ -10,7 +10,7 @@ export const metadata = pageMetadata({
 });
 
 /** Update this date whenever the policy text changes. */
-const LAST_UPDATED = "October 13, 2026";
+const LAST_UPDATED = "October 14, 2026";
 
 export default function PrivacyPage() {
   const turnstile = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
@@ -26,16 +26,15 @@ export default function PrivacyPage() {
         </p>
 
         <h2>Information you give us</h2>
-        <p>When you submit the <Link href="/contact">Request an Estimate</Link> form, we collect:</p>
+        <p>When you submit the <Link href="/contact">contact form</Link>, we collect:</p>
         <ul>
           <li>Your name</li>
           <li>Your phone number</li>
-          <li>Your email address (optional)</li>
-          <li>The city where your project is located</li>
-          <li>The service you&apos;re interested in and your timeline (timeline is optional)</li>
-          <li>Your project description, plus anything else you choose to include in it</li>
+          <li>The reason you&apos;re contacting us (request an estimate, discuss a project, or a general question)</li>
+          <li>Your message, if you choose to write one</li>
+          <li>Which of our service pages you came from, if you followed a link from one</li>
         </ul>
-        <p>Please don&apos;t include sensitive information such as financial account numbers in the description.</p>
+        <p>Please don&apos;t include sensitive information such as financial account numbers in your message.</p>
 
         <h2>Information collected automatically</h2>
         <ul>
@@ -67,7 +66,7 @@ export default function PrivacyPage() {
 
         <h2>How we use your information</h2>
         <ul>
-          <li>To respond to your estimate request and contact you about your project</li>
+          <li>To call you back and respond to your request</li>
           <li>To keep records of the requests and communications we receive</li>
           <li>To protect the website from spam and abuse</li>
         </ul>
@@ -89,7 +88,7 @@ export default function PrivacyPage() {
 
         <h2>How long we keep it</h2>
         <p>
-          We keep estimate requests for as long as needed to respond to you, carry out any project you hire us for, and
+          We keep contact requests for as long as needed to respond to you, carry out any project you hire us for, and
           meet our business and legal record-keeping obligations.
         </p>
 

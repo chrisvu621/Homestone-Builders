@@ -2,14 +2,14 @@
 
 import { headers } from "next/headers";
 import { site } from "@/lib/site";
-import { buildEstimateEmail, getEmailConfig, sendEmail } from "@/lib/estimate/email";
+import { buildInquiryEmail, getEmailConfig, sendEmail } from "@/lib/estimate/email";
 import { checkSubmissionHeuristics, rateLimit, verifyTurnstile } from "@/lib/estimate/spam";
 import type { EstimateFormState } from "@/lib/estimate/state";
-import { validateEstimate } from "@/lib/estimate/validation";
+import { validateInquiry } from "@/lib/estimate/validation";
 
 const CALL_US = `Please call us at ${site.phone.display} instead.`;
 
-export async function submitEstimate(
+export async function submitInquiry(
   prev: EstimateFormState,
   formData: FormData,
 ): Promise<EstimateFormState> {
@@ -38,7 +38,7 @@ export async function submitEstimate(
   }
 
   // 2. Field validation.
-  const result = validateEstimate(formData);
+  const result = validateInquiry(formData);
   if (!result.ok) {
     return {
       status: "invalid",
@@ -68,25 +68,25 @@ export async function submitEstimate(
   const email = getEmailConfig();
   if (!email.configured) {
     console.warn(
-      "[estimate] Email delivery is not configured; submission was NOT delivered. Missing:",
+      "[inquiry] Email delivery is not configured; submission was NOT delivered. Missing:",
       email.missing.join(", ") || "-",
       email.problems.join(" "),
     );
     return {
       status: "not_configured",
-      message: `Our online form isn't accepting requests right now, so your request was not sent. ${CALL_US}`,
+      message: `Our online form isn't accepting requests right now, so your message was not sent. ${CALL_US}`,
       values: result.data,
       attempt,
     };
   }
 
   try {
-    await sendEmail(email.config, buildEstimateEmail(result.data, { submittedAt: new Date() }));
+    await sendEmail(email.config, buildInquiryEmail(result.data, { submittedAt: new Date() }));
   } catch (err) {
-    console.error("[estimate] Delivery failed:", (err as Error).message);
+    console.error("[inquiry] Delivery failed:", (err as Error).message);
     return {
       status: "error",
-      message: `Something went wrong and your request was not sent. ${CALL_US}`,
+      message: `Something went wrong and your message was not sent. ${CALL_US}`,
       values: result.data,
       attempt,
     };
@@ -94,7 +94,7 @@ export async function submitEstimate(
 
   return {
     status: "success",
-    message: `Thanks, ${result.data.name.split(" ")[0]}. We received your request and will reach out at ${result.data.phone}.`,
+    message: `Thanks, ${result.data.name.split(" ")[0]}. We received your request and will call you back at ${result.data.phone}.`,
     attempt,
   };
 }

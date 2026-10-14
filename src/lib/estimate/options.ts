@@ -1,21 +1,18 @@
 import { services } from "../services";
 
-export const serviceOptions = [...services.map((s) => s.label), "Other / not sure"] as const;
+/** "How can we help?" choices. Required. */
+export const reasonOptions = ["Request an estimate", "Discuss a project", "General question"] as const;
 
-export const timelineOptions = [
-  "As soon as possible",
-  "Within 1–3 months",
-  "In 3–6 months",
-  "6+ months from now",
-  "Just planning / gathering information",
-] as const;
+/**
+ * Service pages link to /contact?service=<label>. The page is passed along as a
+ * hidden field so the notification says where the visitor came from.
+ */
+export const topicOptions = services.map((s) => s.label);
 
 export const limits = {
   name: 100,
-  email: 254,
   phone: 30,
-  city: 80,
-  description: 3000,
+  message: 2000,
 } as const;
 
 /** Minimum time (ms) between the form becoming interactive and submission. */

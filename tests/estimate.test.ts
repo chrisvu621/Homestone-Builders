@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { buildEstimateEmail, getEmailConfig, sendEmail, type EmailConfig } from "@/lib/estimate/email";
-import { HONEYPOT_FIELD, serviceOptions, timelineOptions } from "@/lib/estimate/options";
+import { buildInquiryEmail, getEmailConfig, sendEmail, type EmailConfig } from "@/lib/estimate/email";
+import { HONEYPOT_FIELD, reasonOptions, topicOptions } from "@/lib/estimate/options";
 import { checkSubmissionHeuristics, rateLimit, resetRateLimitForTests } from "@/lib/estimate/spam";
-import { normalizeUsPhone, validateEstimate } from "@/lib/estimate/validation";
+import { normalizeUsPhone, validateInquiry } from "@/lib/estimate/validation";
 
 function form(fields: Record<string, string>) {
   const fd = new FormData();
@@ -13,57 +13,56 @@ function form(fields: Record<string, string>) {
 const valid = {
   name: "  Jane   Doe ",
   phone: "(714) 555-0123",
-  email: "Jane@Example.com",
-  city: "Garden Grove",
-  service: serviceOptions[0],
-  timeline: timelineOptions[1],
-  description: "Full kitchen remodel, about 150 sq ft.\r\n\n\n\nNew cabinets.",
+  reason: reasonOptions[0],
+  message: "Kitchen remodel, about 150 sq ft.\r\n\n\n\nNew cabinets.",
 };
 
-describe("validateEstimate", () => {
+describe("validateInquiry", () => {
   it("accepts and normalizes a valid submission", () => {
-    const r = validateEstimate(form(valid));
+    const r = validateInquiry(form(valid));
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.data.name).toBe("Jane Doe");
     expect(r.data.phone).toBe("714-555-0123");
-    expect(r.data.email).toBe("jane@example.com");
-    expect(r.data.description).toBe("Full kitchen remodel, about 150 sq ft.\n\nNew cabinets.");
+    expect(r.data.reason).toBe("Request an estimate");
+    expect(r.data.message).toBe("Kitchen remodel, about 150 sq ft.\n\nNew cabinets.");
   });
 
-  it("allows optional email and timeline to be blank", () => {
-    const r = validateEstimate(form({ ...valid, email: "", timeline: "" }));
-    expect(r.ok).toBe(true);
+  it("allows the message to be blank", () => {
+    expect(validateInquiry(form({ ...valid, message: "" })).ok).toBe(true);
   });
 
-  it("reports every missing required field", () => {
-    const r = validateEstimate(form({}));
+  it("requires only name, phone and reason", () => {
+    const r = validateInquiry(form({}));
     expect(r.ok).toBe(false);
     if (r.ok) return;
-    expect(Object.keys(r.errors).sort()).toEqual(["city", "description", "name", "phone", "service"]);
+    expect(Object.keys(r.errors).sort()).toEqual(["name", "phone", "reason"]);
   });
 
-  it("rejects values outside the allowed lists", () => {
-    const r = validateEstimate(form({ ...valid, service: "Roofing", timeline: "yesterday" }));
+  it("rejects a reason outside the allowed list", () => {
+    const r = validateInquiry(form({ ...valid, reason: "Sell me something" }));
     expect(r.ok).toBe(false);
     if (r.ok) return;
-    expect(r.errors.service).toBeDefined();
-    expect(r.errors.timeline).toBeDefined();
+    expect(r.errors.reason).toBeDefined();
   });
 
-  it("rejects bad email and phone, and over-long text", () => {
-    const r = validateEstimate(
-      form({ ...valid, email: "not-an-email", phone: "123", description: "x".repeat(3001) }),
-    );
+  it("rejects a bad phone number and an over-long message", () => {
+    const r = validateInquiry(form({ ...valid, phone: "123", message: "x".repeat(2001) }));
     expect(r.ok).toBe(false);
     if (r.ok) return;
-    expect(r.errors.email).toBeDefined();
     expect(r.errors.phone).toBeDefined();
-    expect(r.errors.description).toBeDefined();
+    expect(r.errors.message).toBeDefined();
+  });
+
+  it("keeps a known service-page topic and drops unknown ones", () => {
+    const ok = validateInquiry(form({ ...valid, topic: topicOptions[0] }));
+    const bad = validateInquiry(form({ ...valid, topic: "<script>" }));
+    expect(ok.ok && ok.data.topic).toBe(topicOptions[0]);
+    expect(bad.ok && bad.data.topic).toBe("");
   });
 
   it("strips header-injection characters from single-line fields", () => {
-    const r = validateEstimate(form({ ...valid, name: "Jane\r\nBcc: evil@example.com" }));
+    const r = validateInquiry(form({ ...valid, name: "Jane\r\nBcc: evil@example.com" }));
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.data.name).not.toMatch(/[\r\n]/);
@@ -94,8 +93,8 @@ describe("checkSubmissionHeuristics", () => {
     expect(checkSubmissionHeuristics(form({ started_at: String(now - 500) }), now)).toEqual({ ok: false, reason: "too-fast" });
   });
   it("rejects link spam", () => {
-    const description = "see https://a.com https://b.com www.c.com";
-    expect(checkSubmissionHeuristics(form({ started_at: String(now - 20_000), description }), now).ok).toBe(false);
+    const message = "see https://a.com https://b.com www.c.com";
+    expect(checkSubmissionHeuristics(form({ started_at: String(now - 20_000), message }), now).ok).toBe(false);
   });
 });
 
@@ -127,21 +126,35 @@ describe("getEmailConfig", () => {
   });
 });
 
+describe("buildInquiryEmail", () => {
+  const at = { submittedAt: new Date("2026-01-01T18:00:00Z") };
+  it("includes name, phone, reason and message", () => {
+    const e = buildInquiryEmail({ name: "Jane Doe", phone: "714-555-0123", reason: "Discuss a project", message: "ADU in backyard", topic: "" }, at);
+    for (const v of ["Jane Doe", "714-555-0123", "Discuss a project", "ADU in backyard"]) expect(e.text).toContain(v);
+    expect(e.subject).toContain("Jane Doe");
+    expect(e.subject).toContain("714-555-0123");
+  });
+  it("says when no message was left, and notes the service page", () => {
+    const e = buildInquiryEmail({ name: "Jo", phone: "714-555-0123", reason: "Request an estimate", message: "", topic: "Kitchen remodeling" }, at);
+    expect(e.text).toContain("(none)");
+    expect(e.text).toContain("Came from:  Kitchen remodeling page");
+  });
+});
+
 describe("sendEmail", () => {
-  const email = buildEstimateEmail(
-    { ...valid, name: "Jane Doe", phone: "714-555-0123", email: "jane@example.com" },
+  const email = buildInquiryEmail(
+    { name: "Jane Doe", phone: "714-555-0123", reason: "General question", message: "Hello", topic: "" },
     { submittedAt: new Date("2026-01-01T18:00:00Z") },
   );
   const base: Omit<EmailConfig, "provider"> = { apiKey: "secret", from: "Site <site@example.com>", to: ["owner@example.com"] };
 
-  it.each(["resend", "postmark", "sendgrid"] as const)("calls the %s API and includes reply-to", async (provider) => {
+  it.each(["resend", "postmark", "sendgrid"] as const)("calls the %s API with the full inquiry", async (provider) => {
     const fetchMock = vi.fn(async () => new Response("{}", { status: provider === "sendgrid" ? 202 : 200 }));
     await sendEmail({ ...base, provider }, email, fetchMock as unknown as typeof fetch);
     expect(fetchMock).toHaveBeenCalledOnce();
     const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     const body = String(init.body);
-    expect(body).toContain("jane@example.com");
-    expect(body).toContain("Jane Doe");
+    for (const v of ["Jane Doe", "714-555-0123", "General question", "Hello"]) expect(body).toContain(v);
     expect(body).not.toContain("secret");
   });
 

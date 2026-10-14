@@ -1,22 +1,19 @@
-import { limits, serviceOptions, timelineOptions } from "./options";
+import { limits, reasonOptions, topicOptions } from "./options";
 
-export type EstimateFields = {
+export type InquiryFields = {
   name: string;
   phone: string;
-  email: string;
-  city: string;
-  service: string;
-  timeline: string;
-  description: string;
+  reason: string;
+  message: string;
+  /** Service page the visitor came from, if any (hidden field, not shown to the visitor). */
+  topic: string;
 };
 
-export type FieldErrors = Partial<Record<keyof EstimateFields, string>>;
+export type FieldErrors = Partial<Record<"name" | "phone" | "reason" | "message", string>>;
 
 export type ValidationResult =
-  | { ok: true; data: EstimateFields }
-  | { ok: false; errors: FieldErrors; values: EstimateFields };
-
-const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[A-Za-z]{2,}$/;
+  | { ok: true; data: InquiryFields }
+  | { ok: false; errors: FieldErrors; values: InquiryFields };
 
 function str(v: FormDataEntryValue | null): string {
   return typeof v === "string" ? v : "";
@@ -46,15 +43,15 @@ export function normalizeUsPhone(input: string): string | null {
   return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
 }
 
-export function validateEstimate(formData: FormData): ValidationResult {
-  const values: EstimateFields = {
+export function validateInquiry(formData: FormData): ValidationResult {
+  const topic = clean(str(formData.get("topic")));
+  const values: InquiryFields = {
     name: clean(str(formData.get("name"))),
     phone: clean(str(formData.get("phone"))),
-    email: clean(str(formData.get("email"))).toLowerCase(),
-    city: clean(str(formData.get("city"))),
-    service: clean(str(formData.get("service"))),
-    timeline: clean(str(formData.get("timeline"))),
-    description: clean(str(formData.get("description")), true),
+    reason: clean(str(formData.get("reason"))),
+    message: clean(str(formData.get("message")), true),
+    // Unknown topics are dropped silently; the field is informational only.
+    topic: topicOptions.includes(topic) ? topic : "",
   };
   const errors: FieldErrors = {};
 
@@ -62,30 +59,15 @@ export function validateEstimate(formData: FormData): ValidationResult {
   else if (values.name.length > limits.name) errors.name = `Please keep your name under ${limits.name} characters.`;
 
   const phone = normalizeUsPhone(values.phone);
-  if (!values.phone) errors.phone = "Please enter a phone number so we can reach you.";
-  else if (values.phone.length > limits.phone || !phone) errors.phone = "Please enter a valid 10-digit US phone number.";
+  if (!values.phone) errors.phone = "Please enter a phone number so we can call you back.";
+  else if (values.phone.length > limits.phone || !phone) errors.phone = "Please enter a 10-digit US phone number.";
 
-  if (values.email) {
-    if (values.email.length > limits.email || !EMAIL_RE.test(values.email)) {
-      errors.email = "Please enter a valid email address, or leave it blank.";
-    }
+  if (!(reasonOptions as readonly string[]).includes(values.reason)) {
+    errors.reason = "Please choose how we can help.";
   }
 
-  if (!values.city) errors.city = "Please enter the city where the project is located.";
-  else if (values.city.length > limits.city) errors.city = `Please keep the city under ${limits.city} characters.`;
-
-  if (!(serviceOptions as readonly string[]).includes(values.service)) {
-    errors.service = "Please choose a service.";
-  }
-
-  if (values.timeline && !(timelineOptions as readonly string[]).includes(values.timeline)) {
-    errors.timeline = "Please choose a timeline from the list.";
-  }
-
-  if (!values.description) errors.description = "Please tell us a little about the project.";
-  else if (values.description.length < 10) errors.description = "Please add a few more details about the project.";
-  else if (values.description.length > limits.description) {
-    errors.description = `Please keep the description under ${limits.description} characters.`;
+  if (values.message.length > limits.message) {
+    errors.message = `Please keep your message under ${limits.message} characters.`;
   }
 
   if (Object.keys(errors).length > 0) return { ok: false, errors, values };
