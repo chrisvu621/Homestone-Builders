@@ -14,6 +14,11 @@ export type Service = {
   scope: string[];
   planningHeading: string;
   planning: string[];
+  /**
+   * Materials the business has confirmed it installs. Rendered only when non-empty,
+   * so the site never lists a material that hasn't been confirmed.
+   */
+  materials?: string[];
   /** Photo folder under public/projects used on this page, if any. */
   photoCategory?: ProjectCategory;
   /** Large photo near the top of the page, as "<folder>/<file>". Defaults to the first project photo. */
@@ -188,6 +193,35 @@ export const services: Service[] = [
     ],
     photoCategory: "shower-doors",
     heroPhoto: "bathrooms/bathroom-02.jpg",
+  },
+  {
+    slug: "flooring-installation",
+    name: "Flooring Installation",
+    label: "Flooring installation",
+    summary:
+      "New flooring for residential remodels, on its own or as part of a kitchen or bathroom project.",
+    seoTitle: "Flooring Installation in Garden Grove & Orange County",
+    seoDescription:
+      "Residential flooring installation by Homestone Builders Inc., licensed California general contractor CSLB #1142545, for kitchen and bathroom remodels and other rooms in Garden Grove, Westminster, Fountain Valley and nearby Orange County cities.",
+    heading: "Flooring installation",
+    intro:
+      "New floors for homes in Orange County, installed as part of a kitchen or bathroom remodel or as a project of their own. We coordinate the flooring with the rest of the work so it fits the cabinets, tile and trim around it.",
+    scopeHeading: "Where flooring fits",
+    scope: [
+      "New flooring as part of a kitchen or bathroom remodel",
+      "Flooring replacement in other rooms of your home",
+      "Coordinating flooring with cabinets, tile and trim in a larger remodel",
+    ],
+    planningHeading: "Helpful to think about before we talk",
+    planning: [
+      "Which rooms, and roughly how many square feet?",
+      "What flooring is there now?",
+      "Have you chosen a material, or would you like to talk through options?",
+      "Is the flooring part of a larger remodel?",
+    ],
+    // Add materials here once confirmed, e.g. ["Tile", "Luxury vinyl plank (LVP)", "Laminate"].
+    materials: [],
+    photoCategory: "flooring",
   },
 ];
 

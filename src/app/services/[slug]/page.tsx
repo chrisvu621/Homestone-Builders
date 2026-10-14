@@ -117,6 +117,18 @@ export default async function ServicePage({ params }: PageProps<"/services/[slug
             ))}
           </ul>
           <p className="mt-4 text-sm text-ink-soft">Every project is scoped individually.</p>
+          {service.materials && service.materials.length > 0 && (
+            <>
+              <h2 className="type-h3 mt-10">Materials we install</h2>
+              <ul className="mt-6 border-t border-line">
+                {service.materials.map((m) => (
+                  <li key={m} className="border-b border-line py-3.5 text-ink">
+                    {m}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
         <div>
           <h2 className="type-h3">{service.planningHeading}</h2>

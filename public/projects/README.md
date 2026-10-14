@@ -9,6 +9,7 @@ folders is presented on the site as Homestone's own work.
 | `kitchens/`      | Gallery (Kitchens), Kitchen Remodeling page, homepage |
 | `bathrooms/`     | Gallery (Bathrooms), Bathroom Remodeling page, homepage |
 | `shower-doors/`  | Shower Doors page (and gallery, once it has photos) |
+| `flooring/`      | Flooring Installation page (and gallery, once it has photos) |
 | `adus/`, `new-homes/`, `windows-doors/` | Gallery, once they have photos |
 
 - Formats: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`. Next.js resizes and

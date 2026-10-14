@@ -21,6 +21,7 @@ export const projectCategories = {
   "new-homes": { label: "New homes", singular: "New home" },
   "windows-doors": { label: "Windows & doors", singular: "Windows and doors" },
   "shower-doors": { label: "Shower doors", singular: "Shower door installation" },
+  flooring: { label: "Flooring", singular: "Flooring installation" },
 } as const;
 
 export type ProjectCategory = keyof typeof projectCategories;
